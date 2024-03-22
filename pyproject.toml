@@ -1,6 +1,6 @@
 [project]
 name = 'gravithon'
-version = '0.0.0'
+version = '0.0.1'
 authors = [
   { name='Yehuda Elyasaf', email='30yehuda26@gmail.com' },
 ]
