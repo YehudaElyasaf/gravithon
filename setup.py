@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from gravithon.version import __version__
 
-with open('README.md', encoding='utf-8') as file:
+with open('README.md') as file:
     long_description = file.read()
 
 setup(
