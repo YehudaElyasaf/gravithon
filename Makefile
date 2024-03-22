@@ -39,4 +39,4 @@ clean:
 	@ echo CLEANING...
 	@ rm -rf dist
 	@ rm -rf build
-	@ echo
+	@ rm -rf gravithon.egg-info
