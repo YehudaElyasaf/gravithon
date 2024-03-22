@@ -14,4 +14,10 @@ setup(
     author_email='30yehuda26@gmail.com',
     description='d',  # TODO
     long_description=long_description,
+    long_description_content_type='text/markdown',
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+    ],
 )
