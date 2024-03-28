@@ -1,7 +1,7 @@
-from test_version import *
+from version import *
 
 try:
-    test_version()
+    verify_version()
 
 except Exception as e:
     print('Error!')

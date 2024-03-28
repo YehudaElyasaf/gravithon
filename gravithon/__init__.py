@@ -1,2 +1,1 @@
-from version import __version__
-#TODO
+print('TODO: delete this line')
