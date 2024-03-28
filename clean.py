@@ -5,6 +5,7 @@ def clean():
     # delete build files
     system('rm -rf dist')
     system('rm -rf gravithon.egg-info')
+    system('rm -rf __pycache__')
     system('rm -rf */__pycache__')
 
 
