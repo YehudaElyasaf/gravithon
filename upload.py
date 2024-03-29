@@ -8,7 +8,7 @@ PIP = '.venv/bin/pip3'
 def exit_if_error(code):
     # if an error has occurred, stop execution
     if code != 0:
-        print(f'\nUpload stopped. Error code {code}.')
+        print(f'\nUpload stopped. Error code: {code}.')
         exit(code)
 
 

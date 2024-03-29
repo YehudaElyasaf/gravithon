@@ -10,4 +10,10 @@ def verify_version():
     # compare versions
     if pypi_version in content:
         # versions identical
-        raise Exception(f'PyPI version ({pypi_version}) hasn\'t been increased in pyproject.toml')
+        message = f'PyPI version ({pypi_version}) hasn\'t been increased in pyproject.toml'
+        print(message + '.')
+        ignore = input('Continue anyway? (enter "Yes" to upload) ')
+
+        if ignore != 'Yes':
+            raise Exception(message)
+# TODO: delete test
