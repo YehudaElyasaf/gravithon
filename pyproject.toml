@@ -11,7 +11,8 @@ description = 'A small example package' #TODO
 readme = 'README.md'
 
 dependencies = [
-
+    'numpy',
+    'multipledispatch'
 ]
 
 authors = [
