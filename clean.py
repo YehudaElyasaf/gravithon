@@ -7,6 +7,7 @@ def clean():
     system('rm -rf gravithon.egg-info')
     system('rm -rf __pycache__')
     system('rm -rf */__pycache__')
+    system('rm -rf */*/__pycache__') # TODO: simplify
 
 
 if __name__ == '__main__':
