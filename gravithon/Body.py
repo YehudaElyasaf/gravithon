@@ -1,13 +1,13 @@
+from abc import ABC, abstractmethod
 from numpy import ndarray
 from gravithon.errors import *
 
 
-class Body:
+class Body(ABC):
     name: str
     mass: float
     position: ndarray
     velocity: ndarray
-
 
     def __str__(self):
         return \

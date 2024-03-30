@@ -1,6 +1,7 @@
 from numpy import array, ndarray
 from gravithon.Body import Body
 from gravithon.errors import *
+from multipledispatch import dispatch
 
 
 class Space:
@@ -48,6 +49,23 @@ class Space:
             body.velocity = velocity
 
         self.bodies.append(body)
+
+    @dispatch(Body)
+    def remove_body(self, body):
+        try:
+            self.bodies.remove(body)
+        except ValueError:
+            raise BodyNotFoundError(body.name)
+
+    @dispatch(str)
+    def remove_body(self, body_name):
+        # find body in bodies list
+        try:
+            body: Body = next(body for body in self.bodies if body.name == body_name)
+        except StopIteration:
+            raise BodyNotFoundError(body_name)
+
+        self.remove_body(body)
 
     def step(self):
         raise NotImplementedError()
