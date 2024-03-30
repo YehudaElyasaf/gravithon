@@ -3,11 +3,14 @@ from numpy import array, ndarray
 
 
 class Sphere(Body):
-    def __init__(self, name: str, mass: float, velocity: ndarray = array([0, 0, 0])):
-        # TODO: no mass bodies?
-        self.name = name
-        self.mass = mass
-        self.position = None  # Body gets position when it's added to space
-        self.velocity = velocity
+    def __init__(self, name: str, mass: float, radius: float):
+        super().__init__(name, mass)
 
-        self.radius = 10
+        # TODO: check negativity (also for mass etc.)
+        self.radius = radius
+
+    def __str__(self):
+        # TODO: __str__ with other unit systems?
+        return \
+                super().__str__() + \
+                f'  Radius: {self.radius} m' + '\n'
