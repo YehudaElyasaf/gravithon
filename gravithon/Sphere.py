@@ -10,9 +10,3 @@ class Sphere(Body):
         self.velocity = velocity
 
         self.radius = 10
-
-    def move(self, position):
-        self.position += position
-
-    def accelerate(self, velocity):
-        self.velocity += velocity

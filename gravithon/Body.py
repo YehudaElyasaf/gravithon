@@ -1,20 +1,13 @@
-from abc import ABC, abstractmethod
 from numpy import ndarray
+from gravithon.errors import *
 
 
-class Body(ABC):
+class Body:
     name: str
     mass: float
     position: ndarray
     velocity: ndarray
 
-    @abstractmethod
-    def move(self, position):
-        pass
-
-    @abstractmethod
-    def accelerate(self, velocity):
-        pass
 
     def __str__(self):
         return \
@@ -23,3 +16,17 @@ class Body(ABC):
                 f'Mass: {self.mass}' + '\n' + \
                 f'Position: {self.position}' + '\n' + \
                 f'Velocity: {self.velocity}'
+
+    def move(self, position: ndarray):
+        # check dimensions
+        if len(self.position) != len(position):
+            raise DimensionsError(self.name + '\'s position', len(self.position), 'added position', len(position))
+
+        self.position += position
+
+    def accelerate(self, velocity: ndarray):
+        # check dimensions
+        if len(self.velocity) != len(velocity):
+            raise DimensionsError(self.name + '\'s velocity', len(self.velocity), 'added velocity', len(velocity))
+
+        self.velocity += velocity
