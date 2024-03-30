@@ -9,7 +9,7 @@ package-data = {"sample" = ["*.dat"]}
 [project]
 name = 'gravithon'
 keywords = ['physics', '2d', '3d', 'engine'] #TODO
-version = '0.0.3'
+version = '0.0.4'
 description = 'Create multy-dimensional python spaces' #TODO
 readme = 'README.md'
 
@@ -26,7 +26,6 @@ maintainers = [
 ]
 
 license = {file = 'LICESNSE'}
-requires-python = '>=3.8'
 
 classifiers = [
     'License :: OSI Approved :: MIT License',

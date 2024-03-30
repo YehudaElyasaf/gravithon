@@ -1,6 +1,6 @@
 class BodyNotFoundError(Exception):
     def __init__(self, name):
-        message = f'Body {name} was not found in space'
+        message = f'Body "{name}" was not found in space'
         super().__init__(message)
 
 

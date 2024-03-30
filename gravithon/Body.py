@@ -11,8 +11,7 @@ class Body(ABC):
 
     def __str__(self):
         return \
-                self.name.upper() + '\n' + \
-                '-' * len(self.name) + '\n' + \
+                self.name + '\n' + \
                 f'Mass: {self.mass}' + '\n' + \
                 f'Position: {self.position}' + '\n' + \
                 f'Velocity: {self.velocity}'

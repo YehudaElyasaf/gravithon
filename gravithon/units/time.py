@@ -1,4 +1,4 @@
-from prefixes import *
+from gravithon.units.prefixes import *
 
 # MKS units
 s = sec = second = 1

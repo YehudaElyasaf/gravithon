@@ -5,15 +5,27 @@ from multipledispatch import dispatch
 
 
 class Space:
+    def __init__(self, dimensions: int):
+        self.bodies = []
+        self.time = float(0)
+        self.dimensions = dimensions
+
     def __str__(self):
         string = ''
 
+        # bodies count
+        if len(self.bodies) == 0:
+            string += f'No bodies\n'
+        elif len(self.bodies) == 1:
+            string += f'1 body:\n'
+        else:
+            string += f'{len(self.bodies)} bodies:\n'
+
         # bodies
-        string += f'{len(self.bodies)} BODIES:\n'
         for body in self.bodies:
             # indent body's string
             for line in str(body).split('\n'):
-                string += '\t' + line + '\n'
+                string += '  ' + line + '\n'
 
             string += '\n'
 
@@ -21,11 +33,6 @@ class Space:
         string += f'Time: {self.time}'
 
         return string
-
-    def __init__(self, dimensions: int):
-        self.bodies = []
-        self.time = float(0)
-        self.dimensions = dimensions
 
     def add_body(self, body: Body, position: ndarray, velocity: ndarray = None):
         # check dimensions
