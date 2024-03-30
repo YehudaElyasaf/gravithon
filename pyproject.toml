@@ -2,12 +2,15 @@
 requires = ['setuptools']
 build-backend = 'setuptools.build_meta'
 
+[tool.setuptools]
+package-data = {"sample" = ["*.dat"]}
+
+
 [project]
-# project info
 name = 'gravithon'
 keywords = ['physics', '2d', '3d', 'engine'] #TODO
 version = '0.0.2' # edit version here
-description = 'A small example package' #TODO
+description = 'Create multy-dimensional python spaces' #TODO
 readme = 'README.md'
 
 dependencies = [
@@ -33,6 +36,3 @@ classifiers = [
 [project.urls]
 Homepage = 'https://github.com/YehudaElyasaf/gravithon'
 Issues = 'https://github.com/YehudaElyasaf/gravithon/issues' #TODO
-
-[tool.setuptools]
-package-data = {"sample" = ["*.dat"]}
