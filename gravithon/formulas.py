@@ -1,13 +1,13 @@
-import units.astrophisics
+import gravithon.constants.astrophisics
 from Body import *
 from math import pow
-from numpy import array, ndarray
+from numpy import ndarray
 from multipledispatch import dispatch
 
 
 @dispatch(float, float, float)
 def gravity(m1: float, m2: float, r: float):
-    return (units.astrophisics.G * m1 * m2) / pow(r, 2)
+    return (gravithon.constants.astrophisics.G * m1 * m2) / pow(r, 2)
 
 
 @dispatch(Body, Body)
