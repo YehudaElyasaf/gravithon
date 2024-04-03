@@ -1,7 +1,7 @@
 import gravithon.constants.astrophisics
 from Body import *
 from math import pow
-from numpy import ndarray
+from numpy import array, ndarray
 from multipledispatch import dispatch
 
 

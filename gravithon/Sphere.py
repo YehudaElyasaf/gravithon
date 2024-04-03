@@ -1,5 +1,4 @@
 from gravithon.Body import *
-from numpy import array, ndarray
 
 
 class Sphere(Body):
@@ -11,6 +10,5 @@ class Sphere(Body):
 
     def __str__(self):
         # TODO: __str__ with other unit systems?
-        return \
-                super().__str__() + \
-                f'  Radius: {self.radius} m' + '\n'
+        return super().__str__() + \
+            f'  Radius: {self.radius} m' + '\n'

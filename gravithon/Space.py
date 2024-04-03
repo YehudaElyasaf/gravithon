@@ -1,9 +1,11 @@
-from numpy import array, ndarray
 from gravithon.Body import Body
 from gravithon.errors import *
+from gravithon.astronomy.Satellite import Satellite
 from multipledispatch import dispatch
+from numpy import array, ndarray, copy
 
 
+# TODO: 2d and 3d space
 class Space:
     def __init__(self, dimensions: int):
         self.bodies = []
@@ -34,7 +36,8 @@ class Space:
 
         return string
 
-    def add_body(self, body: Body, position: ndarray, velocity: ndarray = None):
+    @dispatch(Body, ndarray, ndarray)
+    def add_body(self, body: Body, position: ndarray, velocity):
         # check dimensions
         if len(position) != self.dimensions:
             # dimensions doesn't match
@@ -46,16 +49,40 @@ class Space:
         # check if body has been already added
         for existing_body in self.bodies:
             if body.name == existing_body.name:
-                raise Exception(f'A body named "{body.name}" already exists in this space')
+                raise BodyAlreadyExistError(body.name)
 
         # add body
-        body.position = position
-        if velocity is None:
-            body.velocity = array([0] * self.dimensions)
-        else:
-            body.velocity = velocity
+        body.position = position.copy()
+        body.velocity = velocity.copy()
 
         self.bodies.append(body)
+
+    @dispatch(Body, ndarray)
+    def add_body(self, body: Body, position: ndarray):
+        velocity = array([0] * self.dimensions)  # zero velocity
+        self.add_body(body, position, velocity)
+
+    @dispatch(Satellite, Body)
+    def add_body(self, satellite: Satellite, parent: Body):
+        """
+        Add satellite in orbit around a parent
+        """
+        # check if sun is in space
+        try:
+            self.bodies.index(parent)
+        except ValueError:
+            raise BodyNotFoundError(parent.name)
+
+        # set position and velocity relative to parent
+        position = parent.position.copy()
+        position[0] += satellite.orbital_radius  # e.g. (in 3d spaces): [px+r py pz]
+        velocity = array([0] * self.dimensions)
+        velocity[0] += satellite.orbital_velocity  # e.g. (in 3d spaces): [v 0 0]
+
+        if isinstance(satellite, Body):
+            self.add_body(satellite, position, velocity)
+        else:
+            raise Exception('Satellite must be a body in order to be added to a space')
 
     @dispatch(Body)
     def remove_body(self, body):
@@ -75,4 +102,4 @@ class Space:
         self.remove_body(body)
 
     def step(self):
-        raise NotImplementedError()
+        raise NotImplementedError()  # TODO

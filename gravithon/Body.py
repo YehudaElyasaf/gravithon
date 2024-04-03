@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from numpy import ndarray
 from gravithon.errors import *
+from numpy import array, ndarray
 
 
 class Body(ABC):
@@ -21,8 +22,9 @@ class Body(ABC):
         return \
                 self.name + ':\n' + \
                 f'  Mass: {self.mass} kg' + '\n' + \
-                f'  Position: {self.position}' + '\n' + \
-                f'  Velocity: {self.velocity}' + '\n'
+                f'  Position: {self.position} m' + '\n' + \
+                f'  Velocity: {self.velocity} m/s' + '\n'
+        # TODO: acceleration`
 
     def move(self, position: ndarray):
         # check dimensions
