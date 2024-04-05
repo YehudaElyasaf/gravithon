@@ -37,7 +37,7 @@ class Space:
         return string
 
     @dispatch(Body, ndarray, ndarray)
-    def add_body(self, body: Body, position: ndarray, velocity):
+    def add_body(self, body: Body, position: ndarray, velocity: ndarray):
         # check dimensions
         if len(position) != self.dimensions:
             # dimensions doesn't match

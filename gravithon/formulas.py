@@ -4,6 +4,15 @@ from numpy import array, ndarray
 from multipledispatch import dispatch
 
 
+def sphere_volume(r):
+    """
+    Calculate sphere's volume
+    :param r: radius
+    :return: volume
+    """
+    return (4 / 3) * pi * (r ** 3)
+
+
 def gravity(m1: float, m2: float, r: float):
     return (G * m1 * m2) / (r ** 2)
 
@@ -23,11 +32,21 @@ def orbital_period(r: float, v: float):
     return (2 * pi * r) / (v)
 
 
-def gravitational_field(m: float, r: float):
+def gravitational_field(M: float, r: float):
     """
     Calculate the gravitational field's magnitude of an object in specific distance
-    :param m: mass
+    :param M: mass
     :param r: radius - distance from mass center
-    :return: field
+    :return: gravitational field's magnitude
     """
-    return (G * m) / (r ** 2)
+    return (G * M) / (r ** 2)
+
+
+def density(m: float, V: float):
+    """
+    Calculate body's density
+    :param m: mass
+    :param V: volume
+    :return: density
+    """
+    return m / V

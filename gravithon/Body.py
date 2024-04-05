@@ -1,7 +1,6 @@
 from __future__ import annotations
 from gravithon import formulas
 from abc import ABC, abstractmethod
-from numpy import ndarray
 from gravithon.errors import *
 from numpy import array, ndarray
 
@@ -13,7 +12,6 @@ class Body(ABC):
     velocity: ndarray
 
     def __init__(self, name: str, mass: float):
-        # TODO: no mass bodies?
         self.name = name
         self.mass = mass
         self.position = None  # Body gets position when it's added to space
@@ -25,7 +23,9 @@ class Body(ABC):
                 self.name + ':\n' + \
                 f'  Mass: {self.mass} kg' + '\n' + \
                 f'  Position: {self.position} m' + '\n' + \
-                f'  Velocity: {self.velocity} m/s' + '\n'
+                f'  Velocity: {self.velocity} m/s' + '\n' + \
+                f'  Volume: {self.volume()} m^3' + '\n' + \
+                f'  Density: {self.density()} kg/m^3'
         # TODO: acceleration`
 
     def move(self, position: ndarray):
@@ -42,10 +42,15 @@ class Body(ABC):
 
         self.velocity += velocity
 
+    @abstractmethod
+    def volume(self):
+        pass
+
+    def density(self):
+        return formulas.density(self.mass, self.volume())
+
     def distance(self, other: Body):
         return formulas.distance(self.position, other.position)
-
-    # TODO: calculate density
 
     def gravitational_field(self, distance: float):
         return formulas.gravitational_field(self.mass, distance)
