@@ -13,7 +13,7 @@ Sun = Sphere(
     mass=1988500.0 * yotta * kilogram,
     radius=695700.0 * kilometer,
 )
-# TODO: check all planets
+
 Mercury = Planet(
     name='Mercury',
     mass=0.33010 * yotta * kilogram,
