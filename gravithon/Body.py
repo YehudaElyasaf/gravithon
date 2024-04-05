@@ -1,4 +1,5 @@
-import gravithon
+from __future__ import annotations
+from gravithon import formulas
 from abc import ABC, abstractmethod
 from numpy import ndarray
 from gravithon.errors import *
@@ -41,7 +42,13 @@ class Body(ABC):
 
         self.velocity += velocity
 
+    def distance(self, other: Body):
+        return formulas.distance(self.position, other.position)
+
     # TODO: calculate density
 
     def gravitational_field(self, distance: float):
-        return gravithon.formulas.gravitational_field(self.mass, distance)
+        return formulas.gravitational_field(self.mass, distance)
+
+    def gravity(self, other: Body):
+        return self.gravitational_field(self.distance(other)) * other.mass
