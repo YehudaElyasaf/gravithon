@@ -1,3 +1,6 @@
+from gravithon import formulas
+
+
 class Satellite:
     # Class for both artificial and natural satellites
     # TODO: make interface
@@ -10,6 +13,8 @@ class Satellite:
         return \
                 f'  Rotation Period: {self.rotation_period} sec' + '\n' + \
                 f'  Orbital Distance: {self.orbital_radius} m' + '\n' + \
-                f'  Orbital Velocity: {self.orbital_velocity} m/sec'
+                f'  Orbital Velocity: {self.orbital_velocity} m/sec' + '\n' + \
+                f'  Orbital Period: {self.orbital_period()} sec' + '\n'
 
-        # TODO: definitions for orbital_period (Year), __str__, Surface gravity
+    def orbital_period(self):
+        return formulas.orbital_period(self.orbital_radius, self.orbital_velocity)

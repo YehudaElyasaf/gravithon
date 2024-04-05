@@ -13,4 +13,8 @@ class Planet(Sphere, Satellite):
 
     def __str__(self):
         return Sphere.__str__(self) + \
-            Satellite.__str__(self)
+            Satellite.__str__(self) + \
+            f'  Surface Gravity: {self.surface_gravity()} sec' + '\n'
+
+    def surface_gravity(self):
+        return self.gravitational_field(self.radius)

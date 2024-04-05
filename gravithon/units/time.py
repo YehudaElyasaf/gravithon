@@ -6,8 +6,7 @@ s = sec = second = 1
 min = minute = 60 * second
 h = hr = hour = 60 * minute
 d = day = 24 * hour
-# TODO: year
-# year = Earth.year # not astronomical year
+# This is 365 days. For astronomical year use gravithon.Earth.orbital_period()
 year_of_days = 365 * day
 
 ms = millisecond = milli * second

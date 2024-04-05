@@ -13,7 +13,7 @@ Sun = Sphere(
     mass=1988500.0 * yotta * kilogram,
     radius=695700.0 * kilometer,
 )
-
+# TODO: check all planets
 Mercury = Planet(
     name='Mercury',
     mass=0.33010 * yotta * kilogram,
@@ -87,7 +87,6 @@ Neptune = Planet(
     orbital_velocity=5.4 * kilometer / second,
 )
 
-# TODO: is planet?
 Pluto = Planet(
     name='Pluto',
     mass=0.01303 * yotta * kilogram,
