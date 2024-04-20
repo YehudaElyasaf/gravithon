@@ -1,9 +1,12 @@
+import numpy.linalg
+
 from gravithon.constants.astrophisics import *
 from math import sqrt, pi
 from numpy import array, ndarray
 from multipledispatch import dispatch
 
 
+# TODO: order formulas
 def sphere_volume(r):
     """
     Calculate sphere's volume
@@ -17,9 +20,19 @@ def gravity(m1: float, m2: float, r: float):
     return (G * m1 * m2) / (r ** 2)
 
 
+def acceleration(F: float, m: float):
+    """
+    calculate body's acceleration
+    :param F: total force
+    :param m: mass
+    :return: acceleration
+    """
+    return F / m
+
+
 @dispatch(ndarray, ndarray)
 def distance(p1, p2):
-    return p1 - p2
+    return numpy.linalg.norm(p1 - p2)
 
 
 def orbital_period(r: float, v: float):

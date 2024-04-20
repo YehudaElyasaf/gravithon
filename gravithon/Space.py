@@ -5,12 +5,12 @@ from multipledispatch import dispatch
 from numpy import array, ndarray, copy
 
 
-# TODO: 2d and 3d space
 class Space:
-    def __init__(self, dimensions: int):
+    def __init__(self, dimensions: int = 3, background_color: str = 'black'):
         self.bodies = []
-        self.time = float(0)
+        self.time = 0.0
         self.dimensions = dimensions
+        self.background_color = background_color
 
     def __str__(self):
         string = ''
@@ -103,3 +103,9 @@ class Space:
 
     def step(self):
         raise NotImplementedError()  # TODO
+
+
+# 2d space
+class Plane(Space):
+    def __init__(self):
+        super().__init__(dimensions=2)

@@ -1,14 +1,15 @@
 from gravithon.Body import *
+from gravithon.errors import *
 
 
 class Sphere(Body):
     def volume(self):
         return formulas.sphere_volume(self.radius)
 
-    def __init__(self, name: str, mass: float, radius: float):
-        super().__init__(name, mass)
+    def __init__(self, name: str, mass: float, radius: float, color: str = None):
+        super().__init__(name, mass, color)
 
-        # TODO: check negativity (also for mass etc.), and add NegativeValueException
+        NonPositiveValueError.validate_positivity(radius)
         self.radius = radius
 
     def __str__(self):

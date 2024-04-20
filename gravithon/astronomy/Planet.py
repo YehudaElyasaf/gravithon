@@ -5,9 +5,9 @@ from gravithon.astronomy.Satellite import Satellite
 class Planet(Sphere, Satellite):
     # radius is volumetric mean radius
     def __init__(self, name: str, mass: float, radius: float,
-                 rotation_period: float, distance_from_parent: float, orbital_velocity: float):
+                 rotation_period: float, distance_from_parent: float, orbital_velocity: float, color: str = None):
         # sphere init
-        Sphere.__init__(self, name, mass, radius)
+        Sphere.__init__(self, name, mass, radius, color)
         # satellite init
         Satellite.__init__(self, rotation_period, distance_from_parent, orbital_velocity)
 

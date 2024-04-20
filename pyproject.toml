@@ -15,7 +15,8 @@ readme = 'README.md'
 
 dependencies = [
     'numpy',
-    'multipledispatch'
+    'multipledispatch',
+    'tkinter'
 ]
 
 authors = [
