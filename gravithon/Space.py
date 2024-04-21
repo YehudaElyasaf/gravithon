@@ -1,4 +1,4 @@
-from gravithon.Body import Body
+from gravithon.Body import *
 from gravithon.fields.Field import Field
 from gravithon.errors import *
 from gravithon.astronomy.Satellite import Satellite
@@ -58,6 +58,14 @@ class Space:
     @dispatch(Body, ndarray, ndarray)
     def add_body(self, body: Body, position: ndarray, velocity: ndarray):
         # check dimensions
+        if body.dimensions != self.dimensions:
+            if isinstance(body, Body3D) and self.dimensions == 2:
+                # body can be converted to space's dimensions
+                body = body.to_2d()
+            else:
+                raise DimensionsError('Space', self.dimensions, body.name, body.dimensions)
+
+
         if len(position) != self.dimensions:
             # dimensions doesn't match
             raise DimensionsError('Space', self.dimensions, body.name + '\'s position', len(position))
@@ -129,6 +137,9 @@ class Space:
 
             # accelerate bodies
         for body in self.bodies:
+            if body.mass is None:
+                continue
+
             acceleration = body.calculate_acceleration(self.dimensions, self.bodies,
                                                        self.fields) * self.step_duration
             body.accelerate(acceleration)

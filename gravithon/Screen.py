@@ -1,8 +1,10 @@
 from gravithon.Space import Space
 from gravithon.Body import Body
-from gravithon.Sphere import Sphere
+from gravithon.Circle import Circle
+from gravithon.Line import Line
 from tkinter import *
 from multipledispatch import dispatch
+import pkgutil
 
 
 class Screen:
@@ -16,6 +18,11 @@ class Screen:
 
         self.master = Tk()
         self.master.title = 'Gravithon'
+
+        icon_path = pkgutil.get_data('gravithon', 'img/icon.png')
+        icon = PhotoImage(data=icon_path)
+        self.master.iconphoto(False, icon)
+
         # TODO: ICON
 
         # title frame
@@ -38,13 +45,23 @@ class Screen:
         self.enable_drag()
 
     def draw_body(self, canvas: Canvas, body: Body):
-        x = body.position[0]
-        y = body.position[1]
 
-        if isinstance(body, Sphere):
-            # draw sphere
+        if isinstance(body, Circle):
+            # draw circle
+            x = body.position[0]
+            y = body.position[1]
+
             coords = [(x - body.radius, y - body.radius), (x + body.radius, y + body.radius)]
-            canvas.create_oval(self.space_to_px(coords, canvas), fill=body.color, width=0)
+            coords = self.space_to_px(coords)
+            canvas.create_oval(coords, fill=body.color, width=0)
+        elif isinstance(body, Line):
+            # draw line
+            self.master.update()
+            coords = [(0, body.y_intercept()), (canvas.winfo_width(), body.solve(0))]
+            coords = self.space_to_px(coords)
+            canvas.create_line(coords, fill=body.color, width=3)
+        else:
+            raise Exception(f'Body of type {type(body)} isn\'t yet supported')
 
     def enable_drag(self):
         def scan_mark(event):
@@ -64,11 +81,10 @@ class Screen:
 
         self.master.update()
 
-    @dispatch(tuple, Canvas)
-    def space_to_px(self, point: tuple, canvas: Canvas):
+    @dispatch(tuple)
+    def space_to_px(self, point: tuple):
         """
         convert in meters to pixels according to space's size
-        :param canvas: canvas
         :param point: x, y
         :return: value in pixels
         """
@@ -79,21 +95,20 @@ class Screen:
         x *= a
         y *= a
         self.master.update()
-        y = canvas.winfo_height() - y
+        y = self.canvas.winfo_height() - y
 
         return x, y
 
-    @dispatch(list, Canvas)
-    def space_to_px(self, points: list, canvas: Canvas):
+    @dispatch(list)
+    def space_to_px(self, points: list):
         """
         convert meters to pixels according to space's size
-        :param canvas: canvas
         :param points: list of points in meters
         :return: list of points in pixels
         """
         ret = []
         for value in points:
-            ret.append(self.space_to_px(value, canvas))
+            ret.append(self.space_to_px(value))
 
         return ret
 

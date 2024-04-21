@@ -11,28 +11,33 @@ from numpy import array, ndarray
 
 class Body(ABC):
     name: str
+    dimensions: int
     mass: float
     position: ndarray
     velocity: ndarray
     color: str
 
-    def __init__(self, name: str, mass: float, color: str = None):
+    def __init__(self, name: str, dimensions: int, mass: float, color: str = None):
         self.name = name
-        NonPositiveValueError.validate_positivity(mass)
-        self.mass = float(mass)
+        self.dimensions = dimensions
+
+        if mass is None:
+            self.mass = None
+        else:
+            NonPositiveValueError.validate_positivity(mass)
+            self.mass = float(mass)
+
         self.position = None  # Body gets position when it's added to space
         self.velocity = None
         self.color = color
 
     def __str__(self):
-        # TODO: better __str__ in all bodies?
         return \
                 self.name + ':\n' + \
-                f'  Mass: {self.mass} kg' + '\n' + \
+                f'  Dimensions: {self.dimensions}' + '\n' + \
+                ('' if self.mass is None else (f'  Mass: {self.mass} kg' + '\n')) + \
                 f'  Position: {self.position} m' + '\n' + \
-                f'  Velocity: {self.velocity} m/s' + '\n' + \
-                f'  Volume: {self.volume()} m^3' + '\n' + \
-                f'  Density: {self.density()} kg/m^3'
+                f'  Velocity: {self.velocity} m/s'
 
     def move(self, velocity: ndarray):
         # check dimensions
@@ -48,13 +53,6 @@ class Body(ABC):
 
         self.velocity += acceleration
 
-    @abstractmethod
-    def volume(self):
-        pass
-
-    def density(self):
-        return formulas.density(self.mass, self.volume())
-
     def distance(self, other: Body):
         return formulas.distance(self.position, other.position)
 
@@ -64,7 +62,7 @@ class Body(ABC):
     def gravitational_force(self, other: Body):
         # set force direction
         force = []
-        for i in range(self.dimensions()):
+        for i in range(self.dimensions):
             axis_distance = formulas.distance(self.position[i], other.position[i])
             force.append(axis_distance)
         force = array(force)
@@ -81,7 +79,8 @@ class Body(ABC):
         force = array([0.0] * space_dimensions)
 
         for body in bodies:
-            if body is not self:
+            if body is not self \
+                    and body.mass is not None:
                 force += self.gravitational_force(body)
 
         for field in fields:
@@ -98,5 +97,40 @@ class Body(ABC):
         F = self.calculate_total_force(space_dimensions, bodies, fields)
         return formulas.acceleration(F, self.mass)
 
-    def dimensions(self):
-        return len(self.position)
+
+class Body2D(Body, ABC):
+    def __init__(self, name: str, mass: float, color: str = None):
+        super().__init__(name, 2, mass, color)
+
+    def __str__(self):
+        return super().__str__() + \
+            '\n' + \
+            f'  Area: {self.area()} m^2'
+
+    @abstractmethod
+    def area(self):
+        pass
+
+
+class Body3D(Body, ABC):
+    def __init__(self, name: str, mass: float, color: str = None):
+        super().__init__(name, 3, mass, color)
+
+        # TODO: remove volume, density and area from __str__?
+
+    def __str__(self):
+        return super().__str__() + \
+            '\n' + \
+            f'  Volume: {self.volume()} m^3' + '\n' + \
+            f'  Density: {self.density()} kg/m^3'
+
+    @abstractmethod
+    def to_2d(self):
+        pass
+
+    @abstractmethod
+    def volume(self):
+        pass
+
+    def density(self):
+        return formulas.density(self.mass, self.volume())

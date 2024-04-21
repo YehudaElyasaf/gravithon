@@ -1,10 +1,9 @@
 from gravithon.Body import *
-from gravithon.Circle import Circle
 from gravithon.errors import *
 from numpy import pi
 
 
-class Sphere(Body3D):
+class Circle(Body2D):
     def __init__(self, name: str, mass: float, radius: float, color: str = None):
         super().__init__(name, mass, color)
 
@@ -16,8 +15,5 @@ class Sphere(Body3D):
             '\n' + \
             f'  Radius: {self.radius} m'
 
-    def volume(self):
-        return (4 / 3) * pi * (self.radius ** 3)
-
-    def to_2d(self):
-        return Circle(self.name, self.mass, self.radius, self.color)
+    def area(self):
+        return pi * (self.radius ** 2)

@@ -1,19 +1,10 @@
 import numpy.linalg
 
 from gravithon.constants.astrophisics import *
-from math import sqrt, pi
-from numpy import array, ndarray
+from numpy import array, ndarray, pi
 from multipledispatch import dispatch
 
 
-# TODO: order formulas
-def sphere_volume(r):
-    """
-    Calculate sphere's volume
-    :param r: radius
-    :return: volume
-    """
-    return (4 / 3) * pi * (r ** 3)
 
 
 def gravity(m1: float, m2: float, r: float):
