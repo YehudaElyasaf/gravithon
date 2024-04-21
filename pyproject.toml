@@ -10,7 +10,7 @@ py-modules = []
 [project]
 name = 'gravithon'
 keywords = ['physics', '2d', '3d', 'engine'] #TODO
-version = '0.0.6'
+version = '0.0.8'
 description = 'Create multy-dimensional python spaces' #TODO
 readme = 'README.md'
 
