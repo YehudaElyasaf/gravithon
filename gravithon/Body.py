@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from gravithon import formulas
+from gravithon.fields.Field import Field
+from gravithon.fields.GravitationalField import GravitationalField
+from gravithon.errors import *
 from abc import ABC, abstractmethod
 
-from gravithon.errors import *
 from numpy import array, ndarray
 
 
@@ -12,13 +14,12 @@ class Body(ABC):
     mass: float
     position: ndarray
     velocity: ndarray
+    color: str
 
-    def __init__(self, name: str, mass: float = None, color: str = None):
+    def __init__(self, name: str, mass: float, color: str = None):
         self.name = name
-        if mass is not None:
-            # bodies with no mass are allowed, bodies with zero mass aren't
-            NegativeValueError.validate_negativity(mass)
-        self.mass = mass
+        NonPositiveValueError.validate_positivity(mass)
+        self.mass = float(mass)
         self.position = None  # Body gets position when it's added to space
         self.velocity = None
         self.color = color
@@ -33,19 +34,19 @@ class Body(ABC):
                 f'  Volume: {self.volume()} m^3' + '\n' + \
                 f'  Density: {self.density()} kg/m^3'
 
-    def move(self, position: ndarray):
+    def move(self, velocity: ndarray):
         # check dimensions
-        if len(self.position) != len(position):
-            raise DimensionsError(self.name + '\'s position', len(self.position), 'added position', len(position))
+        if len(self.position) != len(velocity):
+            raise DimensionsError(self.name + '\'s position', len(self.position), 'velocity', len(velocity))
 
-        self.position += position
+        self.position += velocity
 
-    def accelerate(self, velocity: ndarray):
+    def accelerate(self, acceleration: ndarray):
         # check dimensions
-        if len(self.velocity) != len(velocity):
-            raise DimensionsError(self.name + '\'s velocity', len(self.velocity), 'added velocity', len(velocity))
+        if len(self.velocity) != len(acceleration):
+            raise DimensionsError(self.name + '\'s velocity', len(self.velocity), 'acceleration', len(acceleration))
 
-        self.velocity += velocity
+        self.velocity += acceleration
 
     @abstractmethod
     def volume(self):
@@ -61,22 +62,26 @@ class Body(ABC):
         return formulas.gravitational_field(self.mass, distance)
 
     def gravitational_force(self, other: Body):
-        return array([self.gravitational_field(self.distance(other)) * other.mass, 0.0, 0.0])
+        # TODO: direction, correct dimensions
+        return array([self.gravitational_field(self.distance(other)) * other.mass, 0.0])
 
-    def __total_gravitational_force(self, space_dimensions: int, bodies: list):
+    def __total_gravitational_force(self, space_dimensions: int, bodies: list, fields: list):
         force = array([0.0] * space_dimensions)
 
-        # TODO: Field class
         for body in bodies:
             if body is not self:
                 force += self.gravitational_force(body)
 
+        for field in fields:
+            if isinstance(field, GravitationalField):
+                force += field.value * self.mass
+
         return force
 
-    def calculate_total_force(self, space_dimensions: int, bodies: list):
+    def calculate_total_force(self, space_dimensions: int, bodies: list, fields: list):
         return \
-            self.__total_gravitational_force(space_dimensions, bodies)
+            self.__total_gravitational_force(space_dimensions, bodies, fields)
 
-    def calculate_acceleration(self, space_dimensions: int, bodies: list):
-        F = self.calculate_total_force(space_dimensions, bodies)
+    def calculate_acceleration(self, space_dimensions: int, bodies: list, fields: list):
+        F = self.calculate_total_force(space_dimensions, bodies, fields)
         return formulas.acceleration(F, self.mass)

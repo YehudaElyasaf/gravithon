@@ -14,13 +14,15 @@ class Screen:
         self.space = space
         self.master = Tk()
         self.master.title = 'TITLE'  # TODO
-        # TODO: colors
-        self.render()
 
         self.start_x = start_x
         self.end_x = end_x
         self.start_y = start_y
         self.end_y = end_y
+
+        self.canvas = Canvas(self.master, bg=self.space.background_color, bd=0)
+        self.canvas.pack(fill=BOTH, expand=True)
+        self.enable_pan_and_zoom(self.canvas)
 
     def draw_body(self, canvas: Canvas, body: Body):
         x = body.position[0]
@@ -28,22 +30,23 @@ class Screen:
 
         if isinstance(body, Sphere):
             # draw sphere
-            coords = x - body.radius, y - body.radius, x + body.radius, y + body.radius
-            canvas.create_oval(self.mtopx(coords), fill=body.color)
+            coords = [(x - body.radius, y - body.radius), (x + body.radius, y + body.radius)]
+            canvas.create_oval(self.space_to_px(coords, canvas), fill=body.color, width=0)
 
-    def enable_pan_and_zoom(self, canvas):
-        ZOOM_FACTOR = 1.1
+    @staticmethod
+    def enable_pan_and_zoom(canvas):
+        zoom_factor = 1.1
 
         def zoom_in(event):
             x = canvas.canvasx(event.x)
             y = canvas.canvasy(event.y)
-            factor = ZOOM_FACTOR
+            factor = zoom_factor
             canvas.scale(ALL, x, y, factor, factor)
 
         def zoom_out(event):
             x = canvas.canvasx(event.x)
             y = canvas.canvasy(event.y)
-            factor = 1 / ZOOM_FACTOR
+            factor = 1 / zoom_factor
             canvas.scale(ALL, x, y, factor, factor)
 
         def scan_mark(event):
@@ -58,37 +61,56 @@ class Screen:
         canvas.bind("<B1-Motion>", scan_dragto)
 
     def render(self):
-        canvas = Canvas(self.master, bg=self.space.background_color, bd=0)
-        self.enable_pan_and_zoom(canvas)
+        self.canvas.delete(ALL)
 
         for body in self.space.bodies:
-            self.draw_body(canvas, body)
+            self.draw_body(self.canvas, body)
 
-        canvas.pack(fill=BOTH, expand=True)
-        self.master.mainloop()
-
-    @dispatch(float)
-    def mtopx(self, m: float):
+    @dispatch(tuple, Canvas)
+    def space_to_px(self, point: tuple, canvas: Canvas):
         """
         convert in meters to pixels according to space's size
-        :param m:value in meters
-        :return:value in pixels
+        :param canvas: canvas
+        :param point: x, y
+        :return: value in pixels
         """
-        return m / 100000000
+        x = point[0]
+        y = point[1]
+        a = 100
+        x *= a
+        y *= a
+        y = canvas.winfo_screenheight() - y
 
-    @dispatch(tuple)
-    def mtopx(self, m: tuple):
+        return x, y
+
+    @dispatch(list, Canvas)
+    def space_to_px(self, points: list, canvas: Canvas):
         """
         convert meters to pixels according to space's size
-        :param m:tuple of values in meters
-        :return:tuple of values in pixels
+        :param canvas: canvas
+        :param points: list of points in meters
+        :return: list of points in pixels
         """
-        ret = ()
-        for value in m:
-            ret += (self.mtopx(value),)
+        ret = []
+        for value in points:
+            ret.append(self.space_to_px(value, canvas))
 
         return ret
 
+    def close(self):
+        pass
 
-def close(self):
-    pass
+    def show(self):
+        self.render()
+        self.master.mainloop()
+
+    def step(self):
+        self.render()
+        self.space.step()
+        step_duration_ms = int(self.space.step_duration * 1000)  # convert seconds to ms
+        self.master.after(step_duration_ms, self.step)
+
+    def play(self):
+        # TODO: stop condition
+        self.step()
+        self.master.mainloop()

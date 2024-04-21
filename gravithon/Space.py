@@ -1,4 +1,5 @@
 from gravithon.Body import Body
+from gravithon.fields.Field import Field
 from gravithon.errors import *
 from gravithon.astronomy.Satellite import Satellite
 from multipledispatch import dispatch
@@ -6,11 +7,13 @@ from numpy import array, ndarray, copy
 
 
 class Space:
-    def __init__(self, dimensions: int = 3, background_color: str = 'black'):
+    def __init__(self, dimensions: int = 3, background_color: str = 'black', fps: float = 25):
         self.bodies = []
-        self.time = 0.0
+        self.fields = []
         self.dimensions = dimensions
         self.background_color = background_color
+        self.time = 0.0
+        self.step_duration = 1 / fps
 
     def __str__(self):
         string = ''
@@ -27,6 +30,22 @@ class Space:
         for body in self.bodies:
             # indent body's string
             for line in str(body).split('\n'):
+                string += '  ' + line + '\n'
+
+            string += '\n'
+
+        # fields count
+        if len(self.fields) == 0:
+            string += f'No fields\n'
+        elif len(self.fields) == 1:
+            string += f'1 field:\n'
+        else:
+            string += f'{len(self.fields)} fields:\n'
+
+        # fields
+        for field in self.fields:
+            # indent body's string
+            for line in str(field).split('\n'):
                 string += '  ' + line + '\n'
 
             string += '\n'
@@ -52,8 +71,8 @@ class Space:
                 raise BodyAlreadyExistError(body.name)
 
         # add body
-        body.position = position.copy()
-        body.velocity = velocity.copy()
+        body.position = position.copy().astype(float)
+        body.velocity = velocity.copy().astype(float)
 
         self.bodies.append(body)
 
@@ -77,7 +96,7 @@ class Space:
         position = parent.position.copy()
         position[0] += satellite.orbital_radius  # e.g. (in 3d spaces): [px+r py pz]
         velocity = array([0] * self.dimensions)
-        velocity[0] += satellite.orbital_velocity  # e.g. (in 3d spaces): [v 0 0]
+        velocity[1] += satellite.orbital_velocity  # e.g. (in 3d spaces): [v 0 0]
 
         if isinstance(satellite, Body):
             self.add_body(satellite, position, velocity)
@@ -102,7 +121,35 @@ class Space:
         self.remove_body(body)
 
     def step(self):
-        raise NotImplementedError()  # TODO
+        self.time += self.step_duration
+
+        # move bodies
+        for body in self.bodies:
+            velocity = body.velocity * self.step_duration
+            body.move(velocity)
+
+            # accelerate bodies
+        for body in self.bodies:
+            acceleration = body.calculate_acceleration(self.dimensions, self.bodies, self.fields) * self.step_duration
+            body.accelerate(acceleration)
+
+    def add_field(self, field: Field):
+        # check dimensions
+        if field.dimensions() < self.dimensions:
+            # dimensions doesn't match
+            raise DimensionsError('Space', self.dimensions, 'field', field.dimensions())
+
+        if field.dimensions() > self.dimensions:
+            # shorten field's dimensions to space's dimensions
+            field.value = field.value[:self.dimensions]
+
+        self.fields.append(field)
+
+    def remove_field(self, field: Field):
+        try:
+            self.fields.remove(field)
+        except ValueError:
+            raise FieldNotFoundError()
 
 
 # 2d space

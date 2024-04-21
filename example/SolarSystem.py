@@ -22,13 +22,6 @@ space.add_body(Uranus, Sun)
 space.add_body(Pluto, Sun)
 # Add moon
 space.add_body(Moon, Earth)
-# TODO: run system
 
 print(space)
-screen = Screen(space)
-exit(0)
-
-while True:
-    os.system('clear')
-    print(space)
-    input()
+Screen(space).play()

@@ -10,7 +10,7 @@ class Sphere(Body):
         super().__init__(name, mass, color)
 
         NonPositiveValueError.validate_positivity(radius)
-        self.radius = radius
+        self.radius = float(radius)
 
     def __str__(self):
         # TODO: __str__ with other unit systems?
