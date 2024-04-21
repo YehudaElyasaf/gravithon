@@ -20,7 +20,7 @@ def gravity(m1: float, m2: float, r: float):
     return (G * m1 * m2) / (r ** 2)
 
 
-def acceleration(F: float, m: float):
+def acceleration(F: ndarray, m: float):
     """
     calculate body's acceleration
     :param F: total force
@@ -30,9 +30,23 @@ def acceleration(F: float, m: float):
     return F / m
 
 
+def magnitude(v: ndarray):
+    """
+    calculate vector's magnitude
+    :param v: vector
+    :return: magnitude
+    """
+    return numpy.linalg.norm(v)
+
+
 @dispatch(ndarray, ndarray)
 def distance(p1, p2):
-    return numpy.linalg.norm(p1 - p2)
+    return magnitude(p1 - p2)
+
+
+@dispatch(float, float)
+def distance(p1, p2):
+    return p1 - p2
 
 
 def orbital_period(r: float, v: float):

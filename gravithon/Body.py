@@ -62,8 +62,20 @@ class Body(ABC):
         return formulas.gravitational_field(self.mass, distance)
 
     def gravitational_force(self, other: Body):
-        # TODO: direction, correct dimensions
-        return array([self.gravitational_field(self.distance(other)) * other.mass, 0.0])
+        # set force direction
+        force = []
+        for i in range(self.dimensions()):
+            axis_distance = formulas.distance(self.position[i], other.position[i])
+            force.append(axis_distance)
+        force = array(force)
+
+        # set force magnitude
+        current_magnitude = formulas.magnitude(force)
+        real_magnitude = self.gravitational_field(self.distance(other)) * other.mass
+
+        force *= -(real_magnitude / current_magnitude)
+
+        return force
 
     def __total_gravitational_force(self, space_dimensions: int, bodies: list, fields: list):
         force = array([0.0] * space_dimensions)
@@ -85,3 +97,6 @@ class Body(ABC):
     def calculate_acceleration(self, space_dimensions: int, bodies: list, fields: list):
         F = self.calculate_total_force(space_dimensions, bodies, fields)
         return formulas.acceleration(F, self.mass)
+
+    def dimensions(self):
+        return len(self.position)

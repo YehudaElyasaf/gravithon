@@ -95,7 +95,7 @@ class Space:
         # set position and velocity relative to parent
         position = parent.position.copy()
         position[0] += satellite.orbital_radius  # e.g. (in 3d spaces): [px+r py pz]
-        velocity = array([0] * self.dimensions)
+        velocity = parent.velocity.copy()
         velocity[1] += satellite.orbital_velocity  # e.g. (in 3d spaces): [v 0 0]
 
         if isinstance(satellite, Body):
@@ -122,7 +122,6 @@ class Space:
 
     def step(self):
         self.time += self.step_duration
-
         # move bodies
         for body in self.bodies:
             velocity = body.velocity * self.step_duration
@@ -130,7 +129,8 @@ class Space:
 
             # accelerate bodies
         for body in self.bodies:
-            acceleration = body.calculate_acceleration(self.dimensions, self.bodies, self.fields) * self.step_duration
+            acceleration = body.calculate_acceleration(self.dimensions, self.bodies,
+                                                       self.fields) * self.step_duration
             body.accelerate(acceleration)
 
     def add_field(self, field: Field):
