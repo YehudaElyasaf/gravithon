@@ -151,6 +151,8 @@ class Space:
         except ValueError:
             raise FieldNotFoundError()
 
+    # TODO: space history
+
 
 # 2d space
 class Plane(Space):

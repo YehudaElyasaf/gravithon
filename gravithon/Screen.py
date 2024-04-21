@@ -15,7 +15,18 @@ class Screen:
         self.running = False
 
         self.master = Tk()
-        self.master.title = 'TITLE'  # TODO
+        self.master.title = 'Gravithon'
+        # TODO: ICON
+
+        # title frame
+        self.title_frame = Frame(self.master)
+        self.title_frame.pack(fill=X)
+
+        self.play_pause_btn = Button(self.title_frame, command=self.toggle_play)
+        self.play_pause_btn.pack(side=LEFT)
+
+        self.step_btn = Button(self.title_frame, command=self.step2)
+        self.step_btn.pack(side=LEFT)
 
         self.start_x = start_x
         self.end_x = end_x
@@ -24,7 +35,7 @@ class Screen:
 
         self.canvas = Canvas(self.master, bg=self.space.background_color, bd=0)
         self.canvas.pack(fill=BOTH, expand=True)
-        self.enable_pan_and_zoom()
+        self.enable_drag()
 
     def draw_body(self, canvas: Canvas, body: Body):
         x = body.position[0]
@@ -33,31 +44,15 @@ class Screen:
         if isinstance(body, Sphere):
             # draw sphere
             coords = [(x - body.radius, y - body.radius), (x + body.radius, y + body.radius)]
-            canvas.create_oval(self.space_to_px(coords, canvas), fill=body.color, width=1, outline='red')
+            canvas.create_oval(self.space_to_px(coords, canvas), fill=body.color, width=0)
 
-    def enable_pan_and_zoom(self):
-        zoom_factor = 1.1
-
-        def zoom_in(event):
-            if not self.running:
-                x = self.canvas.canvasx(event.x)
-                y = self.canvas.canvasy(event.y)
-                self.canvas.scale(ALL, x, y, zoom_factor, zoom_factor)
-
-        def zoom_out(event):
-            if not self.running:
-                x = self.canvas.canvasx(event.x)
-                y = self.canvas.canvasy(event.y)
-                self.canvas.scale(ALL, x, y, 1 / zoom_factor, 1 / zoom_factor)
-
+    def enable_drag(self):
         def scan_mark(event):
             self.canvas.scan_mark(event.x, event.y)
 
         def scan_dragto(event):
             self.canvas.scan_dragto(event.x, event.y, gain=1)
 
-        self.canvas.bind_all('<Button-4>', zoom_in)
-        self.canvas.bind_all('<Button-5>', zoom_out)
         self.canvas.bind('<ButtonPress-1>', scan_mark)
         self.canvas.bind("<B1-Motion>", scan_dragto)
 
@@ -112,6 +107,10 @@ class Screen:
             step_duration_ms = int(self.space.step_duration * 1000)  # convert seconds to ms
             self.master.after(step_duration_ms, self.step)
 
+    def step2(self):
+        self.render()
+        self.space.step()
+
     def play(self):
         # TODO: stop condition
         self.master.bind("<space>", self.toggle_play)
@@ -119,7 +118,7 @@ class Screen:
         self.step()
         self.master.mainloop()
 
-    def toggle_play(self, event):
+    def toggle_play(self, event=None):
         self.running = not self.running
         self.step()
 
