@@ -31,6 +31,5 @@ space.add_field(GravitationalField(
     array([0, -Earth.surface_gravity(), 0])
 ))
 
-space.step()
 print(space)
 Screen(space).play()

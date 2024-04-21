@@ -13,7 +13,6 @@ class Sphere(Body):
         self.radius = float(radius)
 
     def __str__(self):
-        # TODO: __str__ with other unit systems?
         return super().__str__() + \
             '\n' + \
             f'  Radius: {self.radius} m'
