@@ -24,4 +24,4 @@ space.add_body(Pluto, Sun)
 space.add_body(Moon, Earth)
 
 print(space)
-Screen(space).play()
+Screen(space)

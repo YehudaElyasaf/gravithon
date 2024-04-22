@@ -128,6 +128,7 @@ class Space:
         self.remove_body(body)
 
     def step(self):
+        # TODO: space history
         self.time += self.step_duration
         # move bodies
         for body in self.bodies:

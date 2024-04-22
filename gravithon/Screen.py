@@ -15,7 +15,6 @@ class Screen:
             raise Exception('only 2d spaces are renderable!')
 
         self.space = space
-        self.running = False
 
         self.master = Tk()
         self.master.title = 'Gravithon'
@@ -31,7 +30,7 @@ class Screen:
         self.play_pause_btn = Button(self.title_frame, command=self.toggle_play)
         self.play_pause_btn.pack(side=LEFT)
 
-        self.step_btn = Button(self.title_frame, command=self.step2)
+        self.step_btn = Button(self.title_frame, command=self.step)
         self.step_btn.pack(side=LEFT)
 
         self.start_x = start_x
@@ -39,8 +38,14 @@ class Screen:
         self.start_y = start_y
         self.end_y = end_y
 
+        # canvas
         self.canvas = Canvas(self.master, bg=self.space.background_color, bd=0)
         self.canvas.pack(fill=BOTH, expand=True)
+        self.render()
+        self.playing = False
+
+        self.master.bind("<space>", self.toggle_play)
+        self.master.mainloop()
 
     def draw_body(self, canvas: Canvas, body: Body):
 
@@ -67,8 +72,6 @@ class Screen:
 
         for body in self.space.bodies:
             self.draw_body(self.canvas, body)
-
-        self.master.update()
 
     @dispatch(tuple)
     def space_to_px(self, point: tuple):
@@ -105,26 +108,24 @@ class Screen:
         self.master.destroy()
 
     def step(self):
-        if self.running:
-            self.render()
-            self.space.step()
-            step_duration_ms = int(self.space.step_duration * 1000)  # convert seconds to ms
-            self.master.after(step_duration_ms, self.step)
-
-    def step2(self):
-        self.render()
         self.space.step()
+        self.render()
+
+    def animate(self):
+        if not self.playing:
+            return
+
+        self.step()
+        step_duration_ms = int(self.space.step_duration * 1000)  # convert seconds to ms
+        self.master.after(step_duration_ms, self.animate)
 
     def play(self):
-        # TODO: stop condition
-        self.render()
-        self.master.bind("<space>", self.toggle_play)
-        self.step()
-        self.master.mainloop()
+        self.playing = True
+        self.animate()
 
     def toggle_play(self, event=None):
-        self.running = not self.running
-        self.step()
+        self.playing = not self.playing
+        self.animate()
 
-    def stop(self):
-        self.running = False
+    def pause(self):
+        self.playing = False

@@ -12,7 +12,7 @@ DIMENSIONS = 2
 
 # switch to 3d space class
 # Create space
-space = Space(dimensions=DIMENSIONS)
+space = Space(dimensions=DIMENSIONS, fps=100)
 
 space.add_body(
     Sphere(
@@ -46,4 +46,4 @@ space.add_field(GravitationalField(
 ))
 
 print(space)
-Screen(space).play()
+Screen(space)
