@@ -2,6 +2,7 @@ from gravithon.Space import Space
 from gravithon.Body import Body
 from gravithon.Circle import Circle
 from gravithon.Line import Line
+from gravithon.errors import *
 from tkinter import *
 from multipledispatch import dispatch
 import pkgutil
@@ -23,8 +24,6 @@ class Screen:
         icon = PhotoImage(data=icon_path)
         self.master.iconphoto(False, icon)
 
-        # TODO: ICON
-
         # title frame
         self.title_frame = Frame(self.master)
         self.title_frame.pack(fill=X)
@@ -42,7 +41,6 @@ class Screen:
 
         self.canvas = Canvas(self.master, bg=self.space.background_color, bd=0)
         self.canvas.pack(fill=BOTH, expand=True)
-        self.enable_drag()
 
     def draw_body(self, canvas: Canvas, body: Body):
 
@@ -57,21 +55,12 @@ class Screen:
         elif isinstance(body, Line):
             # draw line
             self.master.update()
+            # TODO: fill screen allways
             coords = [(0, body.y_intercept()), (canvas.winfo_width(), body.solve(0))]
             coords = self.space_to_px(coords)
             canvas.create_line(coords, fill=body.color, width=3)
         else:
-            raise Exception(f'Body of type {type(body)} isn\'t yet supported')
-
-    def enable_drag(self):
-        def scan_mark(event):
-            self.canvas.scan_mark(event.x, event.y)
-
-        def scan_dragto(event):
-            self.canvas.scan_dragto(event.x, event.y, gain=1)
-
-        self.canvas.bind('<ButtonPress-1>', scan_mark)
-        self.canvas.bind("<B1-Motion>", scan_dragto)
+            raise BodyNotSupportedError(body)
 
     def render(self):
         self.canvas.delete(ALL)
@@ -128,8 +117,8 @@ class Screen:
 
     def play(self):
         # TODO: stop condition
-        self.master.bind("<space>", self.toggle_play)
         self.render()
+        self.master.bind("<space>", self.toggle_play)
         self.step()
         self.master.mainloop()
 

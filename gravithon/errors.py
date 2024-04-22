@@ -63,3 +63,15 @@ class NonPositiveValueError(Exception):
         """
         if not value > 0:
             raise NonPositiveValueError(name)
+
+
+class BodyNotSupportedError(Exception):
+    def __init__(self, body):
+        message = f'Body of type {type(body)} isn\'t yet supported'
+        super().__init__(message)
+
+
+class FieldNotSupportedError(Exception):
+    def __init__(self, field):
+        message = f'Field of type {type(field)} isn\'t yet supported'
+        super().__init__(message)

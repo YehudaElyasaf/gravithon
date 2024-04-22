@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from gravithon import formulas
-from gravithon.fields.Field import Field
 from gravithon.fields.GravitationalField import GravitationalField
 from gravithon.errors import *
 from abc import ABC, abstractmethod
@@ -53,8 +52,9 @@ class Body(ABC):
 
         self.velocity += acceleration
 
+    @abstractmethod
     def distance(self, other: Body):
-        return formulas.distance(self.position, other.position)
+        pass
 
     def gravitational_field(self, distance: float):
         return formulas.gravitational_field(self.mass, distance)
@@ -75,7 +75,11 @@ class Body(ABC):
 
         return force
 
-    def __total_gravitational_force(self, space_dimensions: int, bodies: list, fields: list):
+    @abstractmethod
+    def is_touching(self, other: Body):
+        pass
+
+    def calculate_total_force(self, space_dimensions: int, bodies: list, fields: list):
         force = array([0.0] * space_dimensions)
 
         for body in bodies:
@@ -86,12 +90,10 @@ class Body(ABC):
         for field in fields:
             if isinstance(field, GravitationalField):
                 force += field.value * self.mass
+            else:
+                raise FieldNotSupportedError(field)
 
         return force
-
-    def calculate_total_force(self, space_dimensions: int, bodies: list, fields: list):
-        return \
-            self.__total_gravitational_force(space_dimensions, bodies, fields)
 
     def calculate_acceleration(self, space_dimensions: int, bodies: list, fields: list):
         F = self.calculate_total_force(space_dimensions, bodies, fields)

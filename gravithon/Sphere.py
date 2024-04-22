@@ -21,3 +21,29 @@ class Sphere(Body3D):
 
     def to_2d(self):
         return Circle(self.name, self.mass, self.radius, self.color)
+
+    def is_touching(self, other: Body):
+        distance = self.distance(other)  # also checks dimensions
+
+        if isinstance(other, Sphere):
+            return distance <= self.radius + other.radius
+        else:
+            raise BodyNotSupportedError(other)
+        """
+        # TODO: Plane/Board
+        elif isinstance(other, Line):
+            self.distance(other)"""
+
+    def distance(self, other: Body):
+        if not isinstance(other, Body3D):
+            raise DimensionsError(self.name, self.dimensions, other.name, other.dimensions)
+
+        if isinstance(other, Sphere):
+            formulas.distance(self.position, other.position)
+        else:
+            raise BodyNotSupportedError(other)
+        '''
+        # TODO: Plane/Board
+        elif isinstance(other, Line):
+            A, B, C = other.general_form()
+            formulas.distance_between_point_and_line(self.position[0], self.position[1], A, B, C)'''

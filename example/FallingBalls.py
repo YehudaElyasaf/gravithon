@@ -12,7 +12,7 @@ DIMENSIONS = 2
 
 # switch to 3d space class
 # Create space
-space = Space(dimensions=DIMENSIONS, fps=30)
+space = Space(dimensions=DIMENSIONS)
 
 space.add_body(
     Sphere(
@@ -35,7 +35,6 @@ space.add_body(
 space.add_body(
     Line(
         "Ground",
-        None,
         0,
         'brown'
     )

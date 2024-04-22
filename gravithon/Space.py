@@ -7,7 +7,7 @@ from numpy import array, ndarray, copy
 
 
 class Space:
-    def __init__(self, dimensions: int = 3, background_color: str = 'black', fps: float = 25):
+    def __init__(self, dimensions: int = 3, background_color: str = 'black', fps: float = 100):
         self.bodies = []
         self.fields = []
         self.dimensions = dimensions
@@ -64,7 +64,6 @@ class Space:
                 body = body.to_2d()
             else:
                 raise DimensionsError('Space', self.dimensions, body.name, body.dimensions)
-
 
         if len(position) != self.dimensions:
             # dimensions doesn't match
@@ -135,14 +134,22 @@ class Space:
             velocity = body.velocity * self.step_duration
             body.move(velocity)
 
-            # accelerate bodies
+        # accelerate bodies
         for body in self.bodies:
             if body.mass is None:
                 continue
 
-            acceleration = body.calculate_acceleration(self.dimensions, self.bodies,
-                                                       self.fields) * self.step_duration
+            acceleration = body.calculate_acceleration(self.dimensions, self.bodies, self.fields) * self.step_duration
             body.accelerate(acceleration)
+
+        # collisions
+        for body in self.bodies:
+            for other in self.bodies:
+                if body is other:
+                    continue
+                # check collision between bodies
+                if body.is_touching(other):
+                    print('collision!')
 
     def add_field(self, field: Field):
         # check dimensions

@@ -1,10 +1,8 @@
 import numpy.linalg
 
 from gravithon.constants.astrophisics import *
-from numpy import array, ndarray, pi
+from numpy import array, ndarray, pi, sqrt
 from multipledispatch import dispatch
-
-
 
 
 def gravity(m1: float, m2: float, r: float):
@@ -38,6 +36,12 @@ def distance(p1, p2):
 @dispatch(float, float)
 def distance(p1, p2):
     return p1 - p2
+
+
+def distance_between_point_and_line(px, py, A, B, C):
+    return \
+            abs(A * px + B * py + C) \
+            / sqrt(A ** 2 + B ** 2)
 
 
 def orbital_period(r: float, v: float):
