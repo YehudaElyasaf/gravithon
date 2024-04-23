@@ -3,14 +3,14 @@ requires = ['setuptools']
 build-backend = 'setuptools.build_meta'
 
 [tool.setuptools]
-package-data = { "sample" = ["*.dat"] }
-py-modules = []
+package-data = { "sample" = ['*.dat'] }
+packages = ['gravithon']
 
 
 [project]
 name = 'gravithon'
 keywords = ['physics', '2d', '3d', 'engine'] #TODO
-version = '0.0.9'
+version = '0.0.10'
 description = 'Create multy-dimensional python spaces' #TODO
 readme = 'README.md'
 
