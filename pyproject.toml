@@ -7,7 +7,7 @@ package-data = { "sample" = ['*.dat'] }
 
 [tool.setuptools.packages.find]
 where = ['gravithon']
-include = ['gravithon']  # package names should match these glob patterns (["*"] by default)
+include = ['gravithon*']  # package names should match these glob patterns (["*"] by default)
 exclude = ['*']
 
 
