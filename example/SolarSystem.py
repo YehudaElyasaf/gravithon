@@ -1,13 +1,14 @@
 from gravithon.astronomy.Planets import *
 from gravithon.Space import Space
 from gravithon.Screen import Screen
+from gravithon.units import time
 from numpy import array, ndarray
 
 DIMENSIONS = 2
 
 # switch to 3d space class
 # Create space
-space = Space(dimensions=DIMENSIONS)
+space = Space(dimensions=DIMENSIONS, fps=100)
 
 # Add sun
 space.add_body(Sun, array([0] * DIMENSIONS))
@@ -24,4 +25,4 @@ space.add_body(Pluto, Sun)
 space.add_body(Moon, Earth)
 
 print(space)
-Screen(space).show()
+Screen(space, time=10*time.day/1000000).show()

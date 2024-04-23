@@ -3,6 +3,7 @@ from gravithon.Body import Body
 from gravithon.Circle import Circle
 from gravithon.Line import Line
 from gravithon.errors import *
+from gravithon.units import time
 from tkinter import *
 from multipledispatch import dispatch
 import pkgutil
@@ -10,7 +11,8 @@ import pkgutil
 
 class Screen:
     def __init__(self, space: Space,
-                 start_x: float = None, end_x: float = None, start_y: float = None, end_y: float = None):
+                 start_x: float = None, end_x: float = None, start_y: float = None, end_y: float = None,
+                 time=None):  # TODO: Rename time?
         if space.dimensions != 2:
             raise Exception('only 2d spaces are renderable!')
 
@@ -27,16 +29,23 @@ class Screen:
         self.title_frame = Frame(self.master)
         self.title_frame.pack(fill=X)
 
+        # play pause button
         self.play_pause_btn = Button(self.title_frame, command=self.__toggle_play)
         self.play_pause_btn.pack(side=LEFT)
 
+        # step button
         self.step_btn = Button(self.title_frame, command=self.step)
         self.step_btn.pack(side=LEFT)
+
+        # time label
+        self.time_lbl = Label(self.title_frame)
+        self.time_lbl.pack(side=LEFT)
 
         self.start_x = start_x
         self.end_x = end_x
         self.start_y = start_y
         self.end_y = end_y
+        self.time = time  # TODO: rename self.time
 
         # canvas
         self.canvas = Canvas(self.master, bg=self.space.background_color, bd=0)
@@ -55,7 +64,7 @@ class Screen:
 
             coords = [(x - body.radius, y - body.radius), (x + body.radius, y + body.radius)]
             coords = self.space_to_px(coords)
-            canvas.create_oval(coords, fill=body.color, width=0)
+            canvas.create_oval(coords, fill=body.color, width=2, outline='red')
         elif isinstance(body, Line):
             # draw line
             self.master.update()
@@ -66,9 +75,54 @@ class Screen:
         else:
             raise BodyNotSupportedError(body)
 
-    def render(self):
-        self.canvas.delete(ALL)
+    @staticmethod
+    def __time_to_str(seconds):
+        seconds *= 1000000
+        if seconds == 0:
+            return '%05.2f' % seconds
 
+        # nanoseconds
+        if seconds < time.microsecond:
+            ns = seconds / time.nanosecond
+            return '%05.2f ns' % ns
+
+        # microseconds
+        elif seconds < time.millisecond:
+            μs = seconds / time.microsecond
+            return '%05.2f μs' % μs
+
+        # milliseconds
+        elif seconds < time.second:
+            ms = seconds / time.millisecond
+            return '%05.1f ms' % ms  # different format because milliseconds has 3 digits
+
+        # seconds
+        elif seconds < time.minute:
+            s = seconds
+            return '%05.2f s' % s
+
+        # minutes
+        elif seconds < time.hour:
+            m = seconds / time.minute
+            return '%05.2f h' % m
+
+        # hours
+        elif seconds < time.day:
+            h = seconds / time.hour
+            return '%05.2f h' % h
+
+        # days
+        else:
+            d = seconds / time.day
+            return '%05.2f d' % d
+
+    def render(self):
+        # title frame
+        time_text = 'Time: ' + self.__time_to_str(self.space.time)
+        self.time_lbl.config(text=time_text)
+
+        # canvas
+        self.canvas.delete(ALL)
         for body in self.space.bodies:
             self.draw_body(self.canvas, body)
 
@@ -81,8 +135,8 @@ class Screen:
         """
         x = point[0]
         y = point[1]
-        a = 1 / 100000000
         a = 100
+        a = 1 / 100000000
         x *= a
         y *= a
         self.master.update()
@@ -111,7 +165,8 @@ class Screen:
         self.render()
 
     def animate(self):
-        if not self.playing:
+        if not self.playing or \
+                (self.time is not None and self.space.time + self.space.step_duration > self.time):
             return
 
         self.step()

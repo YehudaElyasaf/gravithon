@@ -7,13 +7,13 @@ from numpy import array, ndarray, copy
 
 
 class Space:
-    def __init__(self, dimensions: int = 3, background_color: str = 'black', fps: float = 100):
+    def __init__(self, dimensions: int = 3, background_color: str = 'black', fps: float = 100, speed: float = 1.0):
         self.bodies = []
         self.fields = []
         self.dimensions = dimensions
         self.background_color = background_color
         self.time = 0.0
-        self.step_duration = 1 / fps
+        self.step_duration = speed / fps
 
     def __str__(self):
         string = ''
@@ -139,11 +139,13 @@ class Space:
 
     def step(self):
         # TODO: space history
+        f = 1000000
+
         self.time += self.step_duration
         # move bodies
         for body in self.bodies:
             velocity = body.velocity * self.step_duration
-            body.move(velocity)
+            body.move(velocity * f)
 
         # accelerate bodies
         for body in self.bodies:
@@ -151,7 +153,7 @@ class Space:
                 continue
 
             acceleration = body.calculate_acceleration(self.dimensions, self.bodies, self.fields) * self.step_duration
-            body.accelerate(acceleration)
+            body.accelerate(acceleration * f)
 
         # collisions
         for body in self.bodies:
