@@ -7,6 +7,7 @@ from gravithon.astronomy.Planets import Earth
 from gravithon.Screen import Screen
 from gravithon.fields.GravitationalField import GravitationalField
 from numpy import array, ndarray
+import time
 
 DIMENSIONS = 2
 
@@ -46,4 +47,4 @@ space.add_field(GravitationalField(
 ))
 
 print(space)
-Screen(space)
+Screen(space).show()

@@ -27,7 +27,7 @@ class Screen:
         self.title_frame = Frame(self.master)
         self.title_frame.pack(fill=X)
 
-        self.play_pause_btn = Button(self.title_frame, command=self.toggle_play)
+        self.play_pause_btn = Button(self.title_frame, command=self.__toggle_play)
         self.play_pause_btn.pack(side=LEFT)
 
         self.step_btn = Button(self.title_frame, command=self.step)
@@ -44,8 +44,7 @@ class Screen:
         self.render()
         self.playing = False
 
-        self.master.bind("<space>", self.toggle_play)
-        self.master.mainloop()
+        self.master.bind("<space>", self.__toggle_play)
 
     def draw_body(self, canvas: Canvas, body: Body):
 
@@ -119,13 +118,14 @@ class Screen:
         step_duration_ms = int(self.space.step_duration * 1000)  # convert seconds to ms
         self.master.after(step_duration_ms, self.animate)
 
-    def play(self):
-        self.playing = True
-        self.animate()
-
-    def toggle_play(self, event=None):
+    def __toggle_play(self, event=None):
         self.playing = not self.playing
         self.animate()
 
-    def pause(self):
-        self.playing = False
+    def show(self):
+        self.master.mainloop()
+
+    def play(self):
+        self.playing = True
+        self.animate()
+        self.show()

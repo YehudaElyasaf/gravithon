@@ -57,13 +57,13 @@ class Space:
 
     @dispatch(Body, ndarray, ndarray)
     def add_body(self, body: Body, position: ndarray, velocity: ndarray):
+        if isinstance(body, Body3D) and self.dimensions == 2:
+            # body should be converted to space's dimensions
+            body = body.two_dimensional
+
         # check dimensions
         if body.dimensions != self.dimensions:
-            if isinstance(body, Body3D) and self.dimensions == 2:
-                # body can be converted to space's dimensions
-                body = body.to_2d()
-            else:
-                raise DimensionsError('Space', self.dimensions, body.name, body.dimensions)
+            raise DimensionsError('Space', self.dimensions, body.name, body.dimensions)
 
         if len(position) != self.dimensions:
             # dimensions doesn't match
@@ -93,7 +93,17 @@ class Space:
         """
         Add satellite in orbit around a parent
         """
-        # check if sun is in space
+        # if satellite is transformed to its 2d form, this method will save it's previous form
+        save_satellite = satellite
+
+        if isinstance(satellite, Body3D) and self.dimensions == 2:
+            # satellite should be converted to space's dimensions
+            satellite = satellite.two_dimensional
+        if isinstance(parent, Body3D) and self.dimensions == 2:
+            # parent should be converted to space's dimensions
+            parent = parent.two_dimensional
+
+        # check if parent is in space
         try:
             self.bodies.index(parent)
         except ValueError:
@@ -101,9 +111,9 @@ class Space:
 
         # set position and velocity relative to parent
         position = parent.position.copy()
-        position[0] += satellite.orbital_radius  # e.g. (in 3d spaces): [px+r py pz]
+        position[0] += save_satellite.orbital_radius  # e.g. (in 3d spaces): [px+r py pz]
         velocity = parent.velocity.copy()
-        velocity[1] += satellite.orbital_velocity  # e.g. (in 3d spaces): [v 0 0]
+        velocity[1] += save_satellite.orbital_velocity  # e.g. (in 3d spaces): [v 0 0]
 
         if isinstance(satellite, Body):
             self.add_body(satellite, position, velocity)

@@ -126,8 +126,9 @@ class Body3D(Body, ABC):
             f'  Volume: {self.volume()} m^3' + '\n' + \
             f'  Density: {self.density()} kg/m^3'
 
+    @property
     @abstractmethod
-    def to_2d(self):
+    def two_dimensional(self):
         pass
 
     @abstractmethod
