@@ -6,7 +6,7 @@ from gravithon.units.mass import kilogram
 from gravithon.units.time import second, hour
 
 # Data from NASA: https://nssdc.gsfc.nasa.gov/planetary/factsheet/
-# if you don't believe them you can ask the guys in Russia instead: https://blogs.mtdv.me/Roscosmos
+# if you don't believe them you can ask the guys in Russia instead: https://artofproblemsolving.com/community/c1595181
 
 Sun = Sphere(
     name='Sun',

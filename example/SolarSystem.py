@@ -11,7 +11,7 @@ DIMENSIONS = 2
 space = Space(dimensions=DIMENSIONS, fps=100)
 
 # Add sun
-space.add_body(Sun, array([0] * DIMENSIONS))
+space.add_body(Sun, array([130000000000, 0]))
 # Add planets
 space.add_body(Mercury, Sun)
 space.add_body(Venus, Sun)
@@ -25,4 +25,4 @@ space.add_body(Pluto, Sun)
 space.add_body(Moon, Earth)
 
 print(space)
-Screen(space, time=1*time.year_of_days, speed=1000000).show()
+Screen(space, time=1.01 * time.year_of_days, speed=1000000).show()

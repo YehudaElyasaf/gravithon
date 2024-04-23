@@ -129,7 +129,6 @@ class Space:
 
     def step(self, speed: float = 1.0):
         from gravithon.astronomy.Planets import Earth, Moon, Sun
-        print(Earth.distance(Moon))
         # increase speed
         self.time += self.step_duration * speed
 

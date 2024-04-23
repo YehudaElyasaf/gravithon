@@ -43,7 +43,7 @@ class Sphere(Body3D):
             raise DimensionsError(self.name, self.dimensions, other.name, other.dimensions)
 
         if isinstance(other, Sphere):
-            formulas.distance(self.position, other.position)
+            return formulas.distance(self.position, other.position)
         else:
             raise BodyNotSupportedError(other)
         '''
