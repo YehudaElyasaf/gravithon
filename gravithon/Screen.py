@@ -54,7 +54,12 @@ class Screen:
         self.render()
         self.playing = False
 
+        # key binds
         self.master.bind("<space>", self.__toggle_play)
+
+        # avoid errors on close
+        self.master.protocol("WM_DELETE_WINDOW", self.canvas.destroy)
+        self.master.protocol("WM_DELETE_WINDOW", self.master.destroy)
 
     def draw_body(self, canvas: Canvas, body: Body):
         # draw circle
@@ -157,15 +162,12 @@ class Screen:
 
         return ret
 
-    def close(self):
-        self.master.destroy()
-
     def step(self):
         # round to avoid floating-point error
         if self.time is not None and round(self.space.time + self.space.step_duration, 10) > self.time:
             # stop running
             self.playing = False
-            return 
+            return
 
         self.space.step(self.speed)
         self.render()
@@ -175,7 +177,12 @@ class Screen:
         if not self.playing:
             return
 
-        self.step()
+        try:
+            self.step()
+        except TclError:
+            # master has been destroyed
+            return
+
         step_duration_ms = int(self.space.step_duration * 1000)  # convert seconds to ms
         self.master.after(step_duration_ms, self.animate)
 

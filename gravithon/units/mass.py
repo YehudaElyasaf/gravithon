@@ -9,5 +9,3 @@ t = tonne = 1000 * kg
 mg = milligram = milli * gram
 μg = microgram = micro * gram
 ng = nanogram = nano * gram
-
-# TODO: more mass units
