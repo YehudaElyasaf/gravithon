@@ -7,13 +7,13 @@ from numpy import array, ndarray, copy
 
 
 class Space:
-    def __init__(self, dimensions: int = 3, background_color: str = 'black', fps: float = 100, speed: float = 1.0):
+    def __init__(self, dimensions: int = 3, background_color: str = 'black', fps: float = 100):
         self.bodies = []
         self.fields = []
         self.dimensions = dimensions
         self.background_color = background_color
         self.time = 0.0
-        self.step_duration = speed / fps
+        self.step_duration = 1 / fps
 
     def __str__(self):
         string = ''
@@ -57,9 +57,17 @@ class Space:
 
     @dispatch(Body, ndarray, ndarray)
     def add_body(self, body: Body, position: ndarray, velocity: ndarray):
-        if isinstance(body, Body3D) and self.dimensions == 2:
-            # body should be converted to space's dimensions
-            body = body.two_dimensional
+        # set velocity and position
+        body.position = position.copy().astype(float)
+        body.velocity = velocity.copy().astype(float)
+        # connect 2d form's speed and velocity
+        if isinstance(body, Body3D):
+            body.two_dimensional.position = body.position
+            body.two_dimensional.velocity = body.velocity
+
+            if self.dimensions == 2:
+                # body should be converted to space's dimensions
+                body = body.two_dimensional
 
         # check dimensions
         if body.dimensions != self.dimensions:
@@ -77,10 +85,6 @@ class Space:
             if body.name == existing_body.name:
                 raise BodyAlreadyExistError(body.name)
 
-        # add body
-        body.position = position.copy().astype(float)
-        body.velocity = velocity.copy().astype(float)
-
         self.bodies.append(body)
 
     @dispatch(Body, ndarray)
@@ -96,17 +100,10 @@ class Space:
         # if satellite is transformed to its 2d form, this method will save it's previous form
         save_satellite = satellite
 
-        if isinstance(satellite, Body3D) and self.dimensions == 2:
-            # satellite should be converted to space's dimensions
-            satellite = satellite.two_dimensional
-        if isinstance(parent, Body3D) and self.dimensions == 2:
-            # parent should be converted to space's dimensions
-            parent = parent.two_dimensional
-
         # check if parent is in space
         try:
-            self.bodies.index(parent)
-        except ValueError:
+            next(body for body in self.bodies if body.name == parent.name)
+        except StopIteration:
             raise BodyNotFoundError(parent.name)
 
         # set position and velocity relative to parent
@@ -120,14 +117,6 @@ class Space:
         else:
             raise Exception('Satellite must be a body in order to be added to a space')
 
-    @dispatch(Body)
-    def remove_body(self, body):
-        try:
-            self.bodies.remove(body)
-        except ValueError:
-            raise BodyNotFoundError(body.name)
-
-    @dispatch(str)
     def remove_body(self, body_name):
         # find body in bodies list
         try:
@@ -135,25 +124,31 @@ class Space:
         except StopIteration:
             raise BodyNotFoundError(body_name)
 
-        self.remove_body(body)
+        # remove
+        self.bodies.remove(body)
 
-    def step(self):
-        # TODO: space history
-        f = 1000000
+    def step(self, speed: float = 1.0):
+        from gravithon.astronomy.Planets import Earth, Moon, Sun
+        print(Earth.distance(Moon))
+        # increase speed
+        self.time += self.step_duration * speed
 
-        self.time += self.step_duration
         # move bodies
         for body in self.bodies:
-            velocity = body.velocity * self.step_duration
-            body.move(velocity * f)
+            velocity = body.velocity.copy()
+            velocity *= self.step_duration
+            velocity *= speed
+            body.move(velocity)
 
         # accelerate bodies
         for body in self.bodies:
             if body.mass is None:
                 continue
 
-            acceleration = body.calculate_acceleration(self.dimensions, self.bodies, self.fields) * self.step_duration
-            body.accelerate(acceleration * f)
+            acceleration = body.calculate_acceleration(self.dimensions, self.bodies, self.fields)
+            acceleration *= self.step_duration
+            acceleration *= speed
+            body.accelerate(acceleration)
 
         # collisions
         for body in self.bodies:
@@ -162,7 +157,7 @@ class Space:
                     continue
                 # check collision between bodies
                 if body.is_touching(other):
-                    print('collision!')
+                    print('collision!')  # TODO: collision
 
     def add_field(self, field: Field):
         # check dimensions

@@ -12,7 +12,7 @@ class Sphere(Body3D):
         NonPositiveValueError.validate_positivity(radius)
         self.radius = float(radius)
 
-        self.__to_2d = Circle(self.name, self.mass, self.radius, self.color)
+        self.__two_dimensional = Circle(self.name, self.mass, self.radius, self.color)
 
     def __str__(self):
         return super().__str__() + \
@@ -21,7 +21,7 @@ class Sphere(Body3D):
 
     @property
     def two_dimensional(self):
-        return self.__to_2d
+        return self.__two_dimensional
 
     def volume(self):
         return (4 / 3) * pi * (self.radius ** 3)

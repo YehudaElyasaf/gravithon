@@ -12,7 +12,7 @@ import pkgutil
 class Screen:
     def __init__(self, space: Space,
                  start_x: float = None, end_x: float = None, start_y: float = None, end_y: float = None,
-                 time=None):  # TODO: Rename time?
+                 time=None, speed: float = 1.0):  # TODO: Rename time?
         if space.dimensions != 2:
             raise Exception('only 2d spaces are renderable!')
 
@@ -46,6 +46,7 @@ class Screen:
         self.start_y = start_y
         self.end_y = end_y
         self.time = time  # TODO: rename self.time
+        self.speed = speed
 
         # canvas
         self.canvas = Canvas(self.master, bg=self.space.background_color, bd=0)
@@ -56,17 +57,16 @@ class Screen:
         self.master.bind("<space>", self.__toggle_play)
 
     def draw_body(self, canvas: Canvas, body: Body):
-
+        # draw circle
         if isinstance(body, Circle):
-            # draw circle
             x = body.position[0]
             y = body.position[1]
 
             coords = [(x - body.radius, y - body.radius), (x + body.radius, y + body.radius)]
             coords = self.space_to_px(coords)
-            canvas.create_oval(coords, fill=body.color, width=2, outline='red')
+            canvas.create_oval(coords, fill=body.color, width=2, outline=body.color)  # TODO: remove outline
+        # draw line
         elif isinstance(body, Line):
-            # draw line
             self.master.update()
             # TODO: fill screen allways
             coords = [(0, body.y_intercept()), (canvas.winfo_width(), body.solve(0))]
@@ -77,7 +77,6 @@ class Screen:
 
     @staticmethod
     def __time_to_str(seconds):
-        seconds *= 1000000
         if seconds == 0:
             return '%05.2f' % seconds
 
@@ -161,12 +160,17 @@ class Screen:
         self.master.destroy()
 
     def step(self):
-        self.space.step()
+        self.space.step(self.speed)
         self.render()
 
     def animate(self):
-        if not self.playing or \
-                (self.time is not None and self.space.time + self.space.step_duration > self.time):
+        # round to avoid floating-point error
+        if self.time is not None and round(self.space.time + self.space.step_duration, 10) > self.time:
+            # stop running
+            self.playing = False
+
+        # stop if not playing
+        if not self.playing:
             return
 
         self.step()

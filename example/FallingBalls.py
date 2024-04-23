@@ -47,4 +47,4 @@ space.add_field(GravitationalField(
 ))
 
 print(space)
-Screen(space).show()
+Screen(space, time=3).show()
