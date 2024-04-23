@@ -14,7 +14,7 @@ exclude = ['*']
 [project]
 name = 'gravithon'
 keywords = ['physics', '2d', '3d', 'engine'] #TODO
-version = '0.0.12'
+version = '0.0.14'
 description = 'Create multy-dimensional python spaces' #TODO
 readme = 'README.md'
 
