@@ -25,4 +25,4 @@ space.add_body(Pluto, Sun)
 space.add_body(Moon, Earth)
 
 print(space)
-Screen(space, time=1.01 * time.year_of_days, speed=1000000).show()
+Screen(space, time=1.01 * time.year_of_days, speed=1300000).show()

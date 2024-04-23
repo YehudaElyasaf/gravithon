@@ -161,15 +161,16 @@ class Screen:
         self.master.destroy()
 
     def step(self):
-        self.space.step(self.speed)
-        self.render()
-
-    def animate(self):
         # round to avoid floating-point error
         if self.time is not None and round(self.space.time + self.space.step_duration, 10) > self.time:
             # stop running
             self.playing = False
+            return 
 
+        self.space.step(self.speed)
+        self.render()
+
+    def animate(self):
         # stop if not playing
         if not self.playing:
             return
