@@ -9,7 +9,7 @@ DIMENSIONS = 2
 
 class SolarSystem(Space):
     def __init__(self):
-        super().__init__(DIMENSIONS)
+        super().__init__(dimensions=DIMENSIONS)
 
         # Add sun
         self.add_body(Sun, array([130000000000, 0]))

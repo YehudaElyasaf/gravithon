@@ -19,7 +19,7 @@ class Line(Body2D):
 
     def area(self):
         # line has no area
-        pass
+        return None
 
     def y_intercept(self):
         if self.position is None:

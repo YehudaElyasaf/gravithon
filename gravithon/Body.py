@@ -34,7 +34,7 @@ class Body(ABC):
         return \
                 self.name + ':\n' + \
                 f'  Dimensions: {self.dimensions}' + '\n' + \
-                ('' if self.mass is None else (f'  Mass: {self.mass} kg' + '\n')) + \
+                ('' if self.mass is None else f'  Mass: {self.mass} kg' + '\n') + \
                 f'  Position: {self.position} m' + '\n' + \
                 f'  Velocity: {self.velocity} m/s'
 
@@ -106,8 +106,7 @@ class Body2D(Body, ABC):
 
     def __str__(self):
         return super().__str__() + \
-            '\n' + \
-            f'  Area: {self.area()} m^2'
+            ('' if self.area() is None else '\n' + f'  Area: {self.area()} m^2')
 
     @abstractmethod
     def area(self):
@@ -118,13 +117,9 @@ class Body3D(Body, ABC):
     def __init__(self, name: str, mass: float, color: str = None):
         super().__init__(name, 3, mass, color)
 
-        # TODO: remove volume, density and area from __str__?
-
     def __str__(self):
         return super().__str__() + \
-            '\n' + \
-            f'  Volume: {self.volume()} m^3' + '\n' + \
-            f'  Density: {self.density()} kg/m^3'
+            ('' if self.volume() is None else '\n' + f'  Volume: {self.volume()} m^3')
 
     @property
     @abstractmethod
