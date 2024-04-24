@@ -1,9 +1,10 @@
+from abc import ABC
+
 from gravithon import formulas
 
 
-class Satellite:
+class Satellite(ABC):
     # Class for both artificial and natural satellites
-    # TODO: make interface
     def __init__(self, rotation_period: float, orbital_radius: float, orbital_velocity: float):
         self.rotation_period = rotation_period
         self.orbital_radius = orbital_radius

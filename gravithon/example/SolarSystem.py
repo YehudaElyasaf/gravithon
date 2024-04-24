@@ -4,7 +4,7 @@ from gravithon.Screen import Screen
 from gravithon.units import time
 from numpy import array, ndarray
 
-DIMENSIONS = 2  # TODO: 3?
+DIMENSIONS = 2
 
 
 class SolarSystem(Space):

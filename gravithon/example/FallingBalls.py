@@ -31,7 +31,7 @@ space.add_body(
         20 * cm,
         color='red'
     ),
-    array([10 * m, 9 * m]))
+    array([6 * m, 9 * m]))
 
 space.add_body(
     Line(
@@ -47,4 +47,4 @@ space.add_field(GravitationalField(
 ))
 
 print(space)
-Screen(space, time=3).show()
+Screen(space).show()

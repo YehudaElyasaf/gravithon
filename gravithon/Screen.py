@@ -22,6 +22,7 @@ class Screen:
         self.master.title('Gravithon')
 
         # title frame
+        # TODO: add options
         self.title_frame = Frame(self.master)
         self.title_frame.pack(fill=X)
 
@@ -65,7 +66,7 @@ class Screen:
 
             coords = [(x - body.radius, y - body.radius), (x + body.radius, y + body.radius)]
             coords = self.space_to_px(coords)
-            canvas.create_oval(coords, fill=body.color, width=3, outline=body.color)  # TODO: remove outline
+            canvas.create_oval(coords, fill=body.color, width=3, outline=body.color)  # TODO: outline option
         # draw line
         elif isinstance(body, Line):
             self.master.update()
@@ -136,8 +137,8 @@ class Screen:
         x = point[0]
         y = point[1]
         # TODO: decide ratio
-        a = 100
         a = 1 / 150000000
+        a = 100
         x *= a
         y *= a
         self.master.update()
