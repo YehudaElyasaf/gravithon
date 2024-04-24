@@ -115,4 +115,3 @@ Moon = Planet(
     distance_from_parent=0.384 * mega * kilometer,
     orbital_velocity=1.022 * kilometer / second,
 )
-# TODO: ISS?

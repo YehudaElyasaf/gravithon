@@ -46,8 +46,29 @@ class Screen:
         self.time_lbl.pack(side=LEFT)
 
         # frame label
-        self.frame_lbl = Label(self.title_frame)
+        self.frame_lbl = Label(self.title_frame, text='Frame: ')
         self.frame_lbl.pack(side=LEFT)
+
+        def frame_entry_callback(event):
+            frame_entry_text = self.frame_entry.get()
+            try:
+                frame_number = int(frame_entry_text)
+                if frame_number >= 0:
+                    self.to_frame(frame_number)
+            except ValueError:
+                pass
+
+            self.render()
+            # unfocus entry
+            self.master.focus()
+
+            # write frame number
+            self.frame_entry.delete(0, END)
+            self.frame_entry.insert(0, str(self.frame))
+
+        self.frame_entry = Entry(self.title_frame, width=4)
+        self.frame_entry.pack(side=LEFT)
+        self.frame_entry.bind('<Return>', frame_entry_callback)
 
         self.start_x = start_x
         self.end_x = end_x
@@ -62,7 +83,7 @@ class Screen:
         self.playing = False
 
         # key binds
-        self.master.bind("<space>", self.__toggle_play)
+        self.master.bind('<space>', self.__toggle_play)
 
         # avoid errors on close
         self.master.protocol("WM_DELETE_WINDOW", self.canvas.destroy)
@@ -136,9 +157,9 @@ class Screen:
         time_text = 'Time: ' + self.__time_to_str(self.space.time)
         self.time_lbl.config(text=time_text)
 
-        # TODO: set frame in entry
-        frame_text = f'Frame: {self.frame}'
-        self.frame_lbl.config(text=frame_text)
+        # write frame number
+        self.frame_entry.delete(0, END)
+        self.frame_entry.insert(0, str(self.frame))
 
         # canvas
         self.canvas.delete(ALL)
