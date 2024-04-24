@@ -3,7 +3,7 @@ from gravithon.fields.Field import Field
 from gravithon.errors import *
 from gravithon.astronomy.Satellite import Satellite
 from multipledispatch import dispatch
-from numpy import array, ndarray, copy
+from numpy import array, ndarray
 
 
 class Space:
@@ -175,8 +175,6 @@ class Space:
             self.fields.remove(field)
         except ValueError:
             raise FieldNotFoundError()
-
-    # TODO: space history
 
 
 # 2d space

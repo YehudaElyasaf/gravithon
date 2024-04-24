@@ -1,3 +1,5 @@
+import copy
+
 from gravithon.Space import Space
 from gravithon.Body import Body
 from gravithon.Circle import Circle
@@ -12,11 +14,12 @@ import pkgutil
 class Screen:
     def __init__(self, space: Space,
                  start_x: float = None, end_x: float = None, start_y: float = None, end_y: float = None,
-                 time=None, speed: float = 1.0):  # TODO: Rename time?
+                 speed: float = 1.0):
         if space.dimensions != 2:
             raise Exception('only 2d spaces are renderable!')
 
-        self.space = space
+        self.frame = 0
+        self.frames = [space]
 
         self.master = Tk()
         self.master.title('Gravithon')
@@ -26,23 +29,30 @@ class Screen:
         self.title_frame = Frame(self.master)
         self.title_frame.pack(fill=X)
 
+        # previous frame button
+        self.step_btn = Button(self.title_frame, command=self.previous_frame)
+        self.step_btn.pack(side=LEFT)
+
         # play pause button
         self.play_pause_btn = Button(self.title_frame, command=self.__toggle_play)
         self.play_pause_btn.pack(side=LEFT)
 
-        # step button
-        self.step_btn = Button(self.title_frame, command=self.step)
+        # next frame button
+        self.step_btn = Button(self.title_frame, command=self.next_frame)
         self.step_btn.pack(side=LEFT)
 
         # time label
         self.time_lbl = Label(self.title_frame)
         self.time_lbl.pack(side=LEFT)
 
+        # frame label
+        self.frame_lbl = Label(self.title_frame)
+        self.frame_lbl.pack(side=LEFT)
+
         self.start_x = start_x
         self.end_x = end_x
         self.start_y = start_y
         self.end_y = end_y
-        self.time = time  # TODO: rename self.time
         self.speed = speed
 
         # canvas
@@ -57,6 +67,10 @@ class Screen:
         # avoid errors on close
         self.master.protocol("WM_DELETE_WINDOW", self.canvas.destroy)
         self.master.protocol("WM_DELETE_WINDOW", self.master.destroy)
+
+    @property
+    def space(self):
+        return self.frames[self.frame]
 
     def draw_body(self, canvas: Canvas, body: Body):
         # draw circle
@@ -122,6 +136,10 @@ class Screen:
         time_text = 'Time: ' + self.__time_to_str(self.space.time)
         self.time_lbl.config(text=time_text)
 
+        # TODO: set frame in entry
+        frame_text = f'Frame: {self.frame}'
+        self.frame_lbl.config(text=frame_text)
+
         # canvas
         self.canvas.delete(ALL)
         for body in self.space.bodies:
@@ -137,8 +155,8 @@ class Screen:
         x = point[0]
         y = point[1]
         # TODO: decide ratio
-        a = 1 / 150000000
         a = 100
+        a = 1 / 150000000
         x *= a
         y *= a
         self.master.update()
@@ -159,15 +177,34 @@ class Screen:
 
         return ret
 
-    def step(self):
-        # round to avoid floating-point error
-        if self.time is not None and round(self.space.time + self.space.step_duration, 10) > self.time:
-            # stop running
-            self.playing = False
+    def to_frame(self, frame: int):
+        if frame < 0:
+            # frame doesn't exist
+            raise Exception(f'frame {frame} doesn\'t exist')
+
+        if frame == self.frame:
+            # no need to move
             return
 
-        self.space.step(self.speed)
+        if frame < len(self.frames):
+            # frame already exists in frame list
+            self.frame = frame
+        else:
+            # step to frame
+            self.frame = len(self.frames) - 1  # move to last frame exists
+            while self.frame < frame:
+                # move to next frame
+                self.frames.append(copy.deepcopy(self.space))
+                self.frame += 1
+                self.space.step(self.speed)
+
         self.render()
+
+    def next_frame(self):
+        self.to_frame(self.frame + 1)
+
+    def previous_frame(self):
+        self.to_frame(self.frame - 1)
 
     def animate(self):
         # stop if not playing
@@ -175,7 +212,7 @@ class Screen:
             return
 
         try:
-            self.step()
+            self.next_frame()
         except TclError:
             # master has been destroyed
             return
