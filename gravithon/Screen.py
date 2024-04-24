@@ -66,7 +66,7 @@ class Screen:
             self.frame_entry.delete(0, END)
             self.frame_entry.insert(0, str(self.frame))
 
-        self.frame_entry = Entry(self.title_frame, width=4)
+        self.frame_entry = Entry(self.title_frame, width=5)
         self.frame_entry.pack(side=LEFT)
         self.frame_entry.bind('<Return>', frame_entry_callback)
 
