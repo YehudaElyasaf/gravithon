@@ -7,8 +7,8 @@ from gravithon.astronomy.Planets import Earth
 from gravithon.Screen import Screen
 from gravithon.fields.GravitationalField import GravitationalField
 from numpy import array, ndarray
-import time
 
+# TODO: change to SOlar System file structure
 DIMENSIONS = 2
 
 # switch to 3d space class
