@@ -8,7 +8,7 @@ package-data = { "sample" = ['*.dat'] }
 [project]
 name = 'gravithon'
 keywords = ['physics', '2d', '3d', 'engine'] #TODO
-version = '0.0.15'
+version = '0.0.16'
 description = 'Create multy-dimensional python spaces' #TODO
 readme = 'README.md'
 

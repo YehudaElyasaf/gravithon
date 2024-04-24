@@ -19,11 +19,7 @@ class Screen:
         self.space = space
 
         self.master = Tk()
-        self.master.title = 'Gravithon'
-
-        icon_path = pkgutil.get_data('gravithon', 'img/icon.png')
-        icon = PhotoImage(data=icon_path)
-        self.master.iconphoto(False, icon)
+        self.master.title('Gravithon')
 
         # title frame
         self.title_frame = Frame(self.master)
