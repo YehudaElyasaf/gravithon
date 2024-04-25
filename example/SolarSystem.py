@@ -28,7 +28,7 @@ def main():
     # Print space info
     print(solar_system)
     # Run space emulation
-    Screen(solar_system, speed=1000000).show()
+    Screen(solar_system, speed=1000000, outline_width=3).show()
 
 
 if __name__ == '__main__':

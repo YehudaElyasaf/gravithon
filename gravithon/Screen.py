@@ -14,7 +14,7 @@ import pkgutil
 class Screen:
     def __init__(self, space: Space,
                  start_x: float = None, end_x: float = None, start_y: float = None, end_y: float = None,
-                 speed: float = 1.0):
+                 speed: float = 1.0, outline_width: int = 0):
         if space.dimensions != 2:
             raise Exception('only 2d spaces are renderable!')
 
@@ -25,7 +25,6 @@ class Screen:
         self.master.title('Gravithon')
 
         # title frame
-        # TODO: add options
         self.title_frame = Frame(self.master)
         self.title_frame.pack(fill=X)
 
@@ -79,6 +78,7 @@ class Screen:
         # canvas
         self.canvas = Canvas(self.master, bg=self.space.background_color, bd=0)
         self.canvas.pack(fill=BOTH, expand=True)
+        self.outline_width = outline_width
         self.render()
         self.playing = False
 
@@ -101,7 +101,7 @@ class Screen:
 
             coords = [(x - body.radius, y - body.radius), (x + body.radius, y + body.radius)]
             coords = self.space_to_px(coords)
-            canvas.create_oval(coords, fill=body.color, width=3, outline=body.color)  # TODO: outline option
+            canvas.create_oval(coords, fill=body.color, width=self.outline_width, outline=body.color)
         # draw line
         elif isinstance(body, Line):
             self.master.update()
