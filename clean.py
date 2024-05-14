@@ -5,9 +5,8 @@ def clean():
     # delete build files
     system('rm -rf dist')
     system('rm -rf gravithon.egg-info')
-    system('rm -rf __pycache__')
-    system('rm -rf */__pycache__')
-    system('rm -rf */*/__pycache__') # TODO: simplify
+    system('rm -rf build')
+    system('rm -rf $(find . -type d -name __pycache__)')
 
 
 if __name__ == '__main__':
