@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from gravithon import formulas
 from gravithon.fields.GravitationalField import GravitationalField
 from gravithon.errors import *
@@ -53,7 +51,7 @@ class Body(ABC):
 
         self.velocity += acceleration
 
-    def collide(self, other: Body):
+    def collide(self, other: 'Body'):
         # check if bodies are in space
         if self.position is None:
             raise BodyNotInSpaceError(self.name)
@@ -79,11 +77,11 @@ class Body(ABC):
         self.velocity = reflected_velocity  # TODO: test, decide velocity magnitude
 
     @abstractmethod
-    def distance(self, other: Body):
+    def distance(self, other: 'Body'):
         pass
 
     @abstractmethod
-    def _normal(self, other: Body):
+    def _normal(self, other: 'Body'):
         """
         Calculate normal vector of collision plane between two bodies
         :param other: collapsed body
@@ -94,7 +92,7 @@ class Body(ABC):
     def gravitational_field(self, distance: float):
         return formulas.gravitational_field(self.mass, distance)
 
-    def gravitational_force(self, other: Body):
+    def gravitational_force(self, other: 'Body'):
         # set force direction
         force = []
         for i in range(self.dimensions):
@@ -111,7 +109,7 @@ class Body(ABC):
         return force
 
     @abstractmethod
-    def is_touching(self, other: Body):
+    def is_touching(self, other: 'Body'):
         pass
 
     def calculate_total_force(self, space_dimensions: int, bodies: list, fields: list):
@@ -133,57 +131,3 @@ class Body(ABC):
     def calculate_acceleration(self, space_dimensions: int, bodies: list, fields: list):
         F = self.calculate_total_force(space_dimensions, bodies, fields)
         return formulas.acceleration(F, self.mass)
-
-
-class Body2D(Body, ABC):
-    def __init__(self, name: str, mass: float, color: str = None):
-        super().__init__(name, 2, mass, color)
-
-    def __str__(self):
-        return super().__str__() + \
-            ('' if self.area() is None else '\n' + f'  Area: {self.area()} m^2')
-
-    @property
-    def x(self):
-        return self.position[0]
-
-    @property
-    def y(self):
-        return self.position[1]
-
-    @abstractmethod
-    def area(self):
-        pass
-
-
-class Body3D(Body, ABC):
-    def __init__(self, name: str, mass: float, color: str = None):
-        super().__init__(name, 3, mass, color)
-
-    def __str__(self):
-        return super().__str__() + \
-            ('' if self.volume() is None else '\n' + f'  Volume: {self.volume()} m^3')
-
-    @property
-    @abstractmethod
-    def two_dimensional(self):
-        pass
-
-    @property
-    def x(self):
-        return self.position[0]
-
-    @property
-    def y(self):
-        return self.position[1]
-
-    @property
-    def z(self):
-        return self.position[2]
-
-    @abstractmethod
-    def volume(self):
-        pass
-
-    def density(self):
-        return formulas.density(self.mass, self.volume())

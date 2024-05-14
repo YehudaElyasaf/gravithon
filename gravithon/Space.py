@@ -1,4 +1,6 @@
-from gravithon.Body import *
+from gravithon.Body import Body
+from gravithon.Body2D import Body2D
+from gravithon.Body3D import Body3D
 from gravithon.Plane import Plane
 from gravithon.fields.Field import Field
 from gravithon.errors import *

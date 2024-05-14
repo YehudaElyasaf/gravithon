@@ -1,4 +1,6 @@
-from gravithon.Body import *
+from gravithon import formulas
+from gravithon.Body import Body
+from gravithon.Body2D import Body2D
 from gravithon.errors import *
 from numpy import pi
 
