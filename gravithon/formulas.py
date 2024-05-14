@@ -38,10 +38,16 @@ def distance(p1, p2):
     return p1 - p2
 
 
-def distance_between_point_and_line(px, py, A, B, C):
+def distance_between_point_and_line(px: float, py: float, A: float, B: float, C: float):
     return \
             abs(A * px + B * py + C) \
             / sqrt(A ** 2 + B ** 2)
+
+
+def distance_between_point_and_plane(px: float, py: float, pz: float, A: float, B: float, C: float, D: float):
+    return \
+            abs(A * px + B * py + C * pz + D) \
+            / sqrt(A ** 2 + B ** 2 + C ** 2)
 
 
 def orbital_period(r: float, v: float):

@@ -106,7 +106,7 @@ class Screen:
         elif isinstance(body, Line):
             self.master.update()
             # TODO: fill screen allways
-            coords = [(0, body.y_intercept()), (canvas.winfo_width(), body.solve(0))]
+            coords = [(0, body.y_intercept()), (canvas.winfo_width(), body.solve(canvas.winfo_width()))]
             coords = self.space_to_px(coords)
             canvas.create_line(coords, fill=body.color, width=3)
         else:

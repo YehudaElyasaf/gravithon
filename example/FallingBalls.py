@@ -1,5 +1,6 @@
 from gravithon.Sphere import Sphere
 from gravithon.Line import Line
+from gravithon.Plane import Plane
 from gravithon.Space import Space
 from gravithon.units.length import *
 from gravithon.units.mass import *
@@ -82,10 +83,29 @@ def TODOdelete():
     space.add_body(
         Line(
             name="Ground",
-            slope=0,
+            slope=0.7,
             color='brown'
         )
-        , array([0, 0])  # Position
+        , array([10, 0.5])  # Position
+    )
+    space.add_body(
+        Line(
+            name="Groun2d",
+            slope=-1,
+            color='brown'
+        )
+        , array([4, 0.5])  # Position
+    )
+
+    space.add_body(
+        Plane(
+            name='Ground2',
+            A=0,
+            B=0,
+            C=1,
+            color='brown'
+        ),
+        array([0, 1])
     )
 
     # Add gravitational field (g)
@@ -96,7 +116,7 @@ def TODOdelete():
     # Print space info
     print(space)
     # Run space emulation
-    Screen(space).show(speed=0.2)
+    Screen(space).show(speed=1)
 
 
 if __name__ == '__main__':

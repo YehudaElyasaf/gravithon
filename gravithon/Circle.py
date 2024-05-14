@@ -4,7 +4,9 @@ from numpy import pi
 
 
 class Circle(Body2D):
-    def __init__(self, name: str, mass: float, radius: float, color: str = None):
+    def __init__(self, name: str, mass: float,
+                 radius: float,
+                 color: str = None):
         super().__init__(name, mass, color)
 
         NonPositiveValueError.validate_positivity(radius)
@@ -28,8 +30,10 @@ class Circle(Body2D):
 
         if isinstance(other, Circle):
             return distance <= self.radius + other.radius
+
         elif isinstance(other, Line):
             return distance <= self.radius
+
         else:
             raise BodyNotSupportedError(other)
 

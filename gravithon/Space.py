@@ -1,4 +1,5 @@
 from gravithon.Body import *
+from gravithon.Plane import Plane
 from gravithon.fields.Field import Field
 from gravithon.errors import *
 from gravithon.astronomy.Satellite import Satellite
@@ -62,6 +63,10 @@ class Space:
         body.velocity = velocity.copy().astype(float)
         # connect 2d form's speed and velocity
         if isinstance(body, Body3D):
+            if isinstance(body, Plane):
+                print(f'Warning (In plane "{body.name}"):' +
+                      ' using Plane in 2D space isn\'t recommended, consider using Line class instead')
+
             body.two_dimensional.position = body.position
             body.two_dimensional.velocity = body.velocity
 
@@ -174,9 +179,3 @@ class Space:
             self.fields.remove(field)
         except ValueError:
             raise FieldNotInSpaceError()
-
-
-# 2d space
-class Plane(Space):
-    def __init__(self):
-        super().__init__(dimensions=2)

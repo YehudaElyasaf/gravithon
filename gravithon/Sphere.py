@@ -1,12 +1,15 @@
 from gravithon.Body import *
 from gravithon.Circle import Circle
+from gravithon.Plane import Plane
 from gravithon.errors import *
 from numpy import pi
 
 
 class Sphere(Body3D):
 
-    def __init__(self, name: str, mass: float, radius: float, color: str = None):
+    def __init__(self, name: str, mass: float,
+                 radius: float,
+                 color: str = None):
         super().__init__(name, mass, color)
 
         NonPositiveValueError.validate_positivity(radius)
@@ -34,12 +37,12 @@ class Sphere(Body3D):
 
         if isinstance(other, Sphere):
             return distance <= self.radius + other.radius
+
+        elif isinstance(other, Plane):
+            return distance <= self.radius
+
         else:
             raise BodyNotSupportedError(other)
-        """
-        # TODO: Plane/Board
-        elif isinstance(other, Line):
-            self.distance(other)"""
 
     def distance(self, other: Body):
         if not isinstance(other, Body3D):
@@ -47,10 +50,12 @@ class Sphere(Body3D):
 
         if isinstance(other, Sphere):
             return formulas.distance(self.position, other.position)
+
+        elif isinstance(other, Plane):
+            # TODO: self.position[0]   =>    self.x (via Body3D class). Same for y, z (and 2D bodies)
+            return formulas.distance_between_point_and_plane(self.position[0], self.position[1], self.position[2],
+                                                             other.A, other.B, other.C, other.D)
+
         else:
             raise BodyNotSupportedError(other)
-        '''
-        # TODO: Plane/Board
-        elif isinstance(other, Line):
-            A, B, C = other.general_form()
-            formulas.distance_between_point_and_line(self.position[0], self.position[1], A, B, C)'''
+       

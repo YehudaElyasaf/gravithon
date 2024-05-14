@@ -56,9 +56,11 @@ class Line(Body2D):
 
         if isinstance(other, Circle):
             return distance <= other.radius
+
         elif isinstance(other, Line):
             # if lines are not parallel they have an intersection
             return self.slope != other.slope
+
         else:
             raise BodyNotSupportedError(other)
 
@@ -68,12 +70,12 @@ class Line(Body2D):
 
         if isinstance(other, Circle):
             A, B, C = self.general_form()
-            formulas.distance_between_point_and_line(self.position[0], self.position[1], A, B, C)
+            formulas.distance_between_point_and_line(other.position[0], other.position[1], A, B, C)
             return formulas.distance(self.position, other.position)
 
         elif isinstance(other, Line):
-            # there is no distance between lines
-            raise BodyNotSupportedError(other)
+            # there is no distance between two lines (unless they are parallel)
+            raise Exception('Can\'t calculate distance between two lines')
 
         else:
             raise BodyNotSupportedError(other)
