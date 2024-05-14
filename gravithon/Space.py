@@ -83,7 +83,7 @@ class Space:
         # check if body has been already added
         for existing_body in self.bodies:
             if body.name == existing_body.name:
-                raise BodyAlreadyExistError(body.name)
+                raise BodyAlreadyInSpaceError(body.name)
 
         self.bodies.append(body)
 
@@ -104,7 +104,7 @@ class Space:
         try:
             next(body for body in self.bodies if body.name == parent.name)
         except StopIteration:
-            raise BodyNotFoundError(parent.name)
+            raise BodyNotInSpaceError(parent.name)
 
         # set position and velocity relative to parent
         position = parent.position.copy()
@@ -122,7 +122,7 @@ class Space:
         try:
             body: Body = next(body for body in self.bodies if body.name == body_name)
         except StopIteration:
-            raise BodyNotFoundError(body_name)
+            raise BodyNotInSpaceError(body_name)
 
         # remove
         self.bodies.remove(body)
@@ -154,9 +154,8 @@ class Space:
             for other in self.bodies:
                 if body is other:
                     continue
-                # check collision between bodies
-                if body.is_touching(other):
-                    print('collision!')  # TODO: collision
+
+                body.collide(other)
 
     def add_field(self, field: Field):
         # check dimensions
@@ -174,7 +173,7 @@ class Space:
         try:
             self.fields.remove(field)
         except ValueError:
-            raise FieldNotFoundError()
+            raise FieldNotInSpaceError()
 
 
 # 2d space

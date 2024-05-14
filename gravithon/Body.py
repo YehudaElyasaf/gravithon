@@ -5,6 +5,7 @@ from gravithon.fields.GravitationalField import GravitationalField
 from gravithon.errors import *
 from abc import ABC, abstractmethod
 
+import numpy as np
 from numpy import array, ndarray
 
 
@@ -52,8 +53,42 @@ class Body(ABC):
 
         self.velocity += acceleration
 
+    def collide(self, other: Body):
+        # check if bodies are in space
+        if self.position is None:
+            raise BodyNotInSpaceError(self.name)
+        if other.position is None:
+            raise BodyNotInSpaceError(other.name)
+
+        # check dimensions
+        if self.dimensions != other.dimensions:
+            raise DimensionsError(self.name, self.dimensions, other.name, other.dimensions)
+
+        # check if body has to move
+        if self.mass is None or \
+                not self.is_touching(other):
+            return
+
+        # check collision between bodies
+        relative_velocity = self.velocity# - other.velocity  # self velocity relative to other body TODO: needed?
+
+        normal_unit = other._normal(self) / np.linalg.norm(other._normal(self))
+        dot = np.dot(relative_velocity, normal_unit)
+        reflected_velocity = relative_velocity - 2 * dot * normal_unit
+
+        self.velocity = reflected_velocity  # TODO: test, decide velocity magnitude
+
     @abstractmethod
     def distance(self, other: Body):
+        pass
+
+    @abstractmethod
+    def _normal(self, other: Body):
+        """
+        Calculate normal vector of collision plane between two bodies
+        :param other: collapsed body
+        :return: normal
+        """
         pass
 
     def gravitational_field(self, distance: float):

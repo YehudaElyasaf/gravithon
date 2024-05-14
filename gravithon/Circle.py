@@ -18,6 +18,9 @@ class Circle(Body2D):
     def area(self):
         return pi * (self.radius ** 2)
 
+    def _normal(self, other: Body):
+        return other.position - self.position
+
     def is_touching(self, other: Body):
         from gravithon.Line import Line
 
@@ -26,7 +29,7 @@ class Circle(Body2D):
         if isinstance(other, Circle):
             return distance <= self.radius + other.radius
         elif isinstance(other, Line):
-            self.distance(other)
+            return distance <= self.radius
         else:
             raise BodyNotSupportedError(other)
 

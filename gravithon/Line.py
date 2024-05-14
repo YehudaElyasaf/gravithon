@@ -21,6 +21,10 @@ class Line(Body2D):
         # line has no area
         return None
 
+    def _normal(self, other: Body):
+        A, B, C = self.general_form()
+        return array([A, B])
+
     def y_intercept(self):
         if self.position is None:
             raise Exception('Line has no position')

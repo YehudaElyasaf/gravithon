@@ -1,16 +1,16 @@
-class BodyNotFoundError(Exception):
+class BodyNotInSpaceError(Exception):
     def __init__(self, name: str):
         message = f'Body "{name}" is not in space'
         super().__init__(message)
 
 
-class BodyAlreadyExistError(Exception):
+class BodyAlreadyInSpaceError(Exception):
     def __init__(self, name: str):
         message = f'A body named "{name}" already exists in this space'
         super().__init__(message)
 
 
-class FieldNotFoundError(Exception):
+class FieldNotInSpaceError(Exception):
     def __init__(self):
         message = f'Field is not in space'
         super().__init__(message)

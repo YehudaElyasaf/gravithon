@@ -26,6 +26,9 @@ class Sphere(Body3D):
     def volume(self):
         return (4 / 3) * pi * (self.radius ** 3)
 
+    def _normal(self, other: Body):
+        return other.position - self.position
+
     def is_touching(self, other: Body):
         distance = self.distance(other)  # also checks dimensions
 

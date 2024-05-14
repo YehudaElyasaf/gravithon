@@ -14,7 +14,7 @@ import pkgutil
 class Screen:
     def __init__(self, space: Space,
                  start_x: float = None, end_x: float = None, start_y: float = None, end_y: float = None,
-                 speed: float = 1.0, outline_width: int = 0):
+                 speed: float = 1.0, outline_width: int = 0):  # TODO: move 'speed' to 'play()'?
         if space.dimensions != 2:
             raise Exception('only 2d spaces are renderable!')
 
@@ -176,8 +176,8 @@ class Screen:
         x = point[0]
         y = point[1]
         # TODO: decide ratio
-        a = 100
         a = 1 / 150000000
+        a = 100
         x *= a
         y *= a
         self.master.update()
