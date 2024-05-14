@@ -48,7 +48,7 @@ class Circle(Body2D):
 
         elif isinstance(other, Line):
             A, B, C = other.general_form()
-            return formulas.distance_between_point_and_line(self.position[0], self.position[1], A, B, C)
+            return formulas.distance_between_point_and_line(self.x, self.y, A, B, C)
 
         else:
             raise BodyNotSupportedError(other)

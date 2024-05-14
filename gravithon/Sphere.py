@@ -52,10 +52,8 @@ class Sphere(Body3D):
             return formulas.distance(self.position, other.position)
 
         elif isinstance(other, Plane):
-            # TODO: self.position[0]   =>    self.x (via Body3D class). Same for y, z (and 2D bodies)
-            return formulas.distance_between_point_and_plane(self.position[0], self.position[1], self.position[2],
+            return formulas.distance_between_point_and_plane(self.x, self.y, self.z,
                                                              other.A, other.B, other.C, other.D)
 
         else:
             raise BodyNotSupportedError(other)
-       

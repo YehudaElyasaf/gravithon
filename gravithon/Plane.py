@@ -23,10 +23,8 @@ class Plane(Body3D):
         if self.position is None:
             return
         # calculate the perpendicular distance of the plane from the origin
-        x, y, z = self.position[0], self.position[1], self.position[2]
-
         # D = Ax + By + Cz
-        return self.A * x + self.B * y + self.C * z
+        return self.A * self.x + self.B * self.y + self.C * self.z
 
     def __str__(self):
         return super().__str__() + \
@@ -75,7 +73,7 @@ class Plane(Body3D):
             raise DimensionsError(self.name, self.dimensions, other.name, other.dimensions)
 
         if isinstance(other, Sphere):
-            return formulas.distance_between_point_and_plane(other.position[0], other.position[1], other.position[2],
+            return formulas.distance_between_point_and_plane(other.x, other.y, other.z,
                                                              self.A, self.B, self.C, self.D)
 
         elif isinstance(other, Plane):

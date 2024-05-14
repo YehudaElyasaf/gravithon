@@ -70,7 +70,7 @@ class Body(ABC):
             return
 
         # check collision between bodies
-        relative_velocity = self.velocity# - other.velocity  # self velocity relative to other body TODO: needed?
+        relative_velocity = self.velocity  # - other.velocity  # self velocity relative to other body TODO: needed?
 
         normal_unit = other._normal(self) / np.linalg.norm(other._normal(self))
         dot = np.dot(relative_velocity, normal_unit)
@@ -143,6 +143,14 @@ class Body2D(Body, ABC):
         return super().__str__() + \
             ('' if self.area() is None else '\n' + f'  Area: {self.area()} m^2')
 
+    @property
+    def x(self):
+        return self.position[0]
+
+    @property
+    def y(self):
+        return self.position[1]
+
     @abstractmethod
     def area(self):
         pass
@@ -160,6 +168,18 @@ class Body3D(Body, ABC):
     @abstractmethod
     def two_dimensional(self):
         pass
+
+    @property
+    def x(self):
+        return self.position[0]
+
+    @property
+    def y(self):
+        return self.position[1]
+
+    @property
+    def z(self):
+        return self.position[2]
 
     @abstractmethod
     def volume(self):

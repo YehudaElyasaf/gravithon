@@ -29,10 +29,8 @@ class Line(Body2D):
         if self.position is None:
             raise Exception('Line has no position')
         else:
-            # n=y-mx
-            x = self.position[0]
-            y = self.position[1]
-            return y - self.slope * x
+            # n = y - mx
+            return self.y - self.slope * self.x
 
     def solve(self, x):
         # y=mx+n
@@ -70,7 +68,7 @@ class Line(Body2D):
 
         if isinstance(other, Circle):
             A, B, C = self.general_form()
-            formulas.distance_between_point_and_line(other.position[0], other.position[1], A, B, C)
+            formulas.distance_between_point_and_line(other.x, other.y, A, B, C)
             return formulas.distance(self.position, other.position)
 
         elif isinstance(other, Line):

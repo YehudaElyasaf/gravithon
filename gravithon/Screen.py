@@ -96,10 +96,7 @@ class Screen:
     def draw_body(self, canvas: Canvas, body: Body):
         # draw circle
         if isinstance(body, Circle):
-            x = body.position[0]
-            y = body.position[1]
-
-            coords = [(x - body.radius, y - body.radius), (x + body.radius, y + body.radius)]
+            coords = [(body.x - body.radius, body.y - body.radius), (body.x + body.radius, body.y + body.radius)]
             coords = self.space_to_px(coords)
             canvas.create_oval(coords, fill=body.color, width=self.outline_width, outline=body.color)
         # draw line
