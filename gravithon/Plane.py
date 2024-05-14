@@ -1,6 +1,7 @@
 from gravithon.Line import *
 from gravithon.Sphere import *
 from gravithon.errors import *
+from numpy import array, ndarray
 
 
 class Plane(Body3D):

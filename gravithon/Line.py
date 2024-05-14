@@ -2,6 +2,7 @@ from gravithon.Body import Body
 from gravithon.Body2D import Body2D
 from gravithon.Circle import Circle
 from gravithon.errors import *
+from numpy import array, ndarray
 
 
 class Line(Body2D):

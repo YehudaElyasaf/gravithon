@@ -3,7 +3,7 @@ from gravithon.Body3D import Body3D
 from gravithon.Circle import Circle
 from gravithon.Plane import Plane
 from gravithon.errors import *
-from numpy import pi
+from numpy import array, ndarray, pi
 
 
 class Sphere(Body3D):

@@ -2,7 +2,7 @@ from gravithon import formulas
 from gravithon.Body import Body
 from gravithon.Body2D import Body2D
 from gravithon.errors import *
-from numpy import pi
+from numpy import array, ndarray, pi
 
 
 class Circle(Body2D):
