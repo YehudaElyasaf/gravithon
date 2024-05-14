@@ -14,10 +14,11 @@ import pkgutil
 class Screen:
     def __init__(self, space: Space,
                  start_x: float = None, end_x: float = None, start_y: float = None, end_y: float = None,
-                 speed: float = 1.0, outline_width: int = 0):  # TODO: move 'speed' to 'play()'?
+                 outline_width: int = 0):
         if space.dimensions != 2:
             raise Exception('only 2d spaces are renderable!')
 
+        self.speed = 1.0
         self.frame = 0
         self.frames = [space]
 
@@ -73,7 +74,6 @@ class Screen:
         self.end_x = end_x
         self.start_y = start_y
         self.end_y = end_y
-        self.speed = speed
 
         # canvas
         self.canvas = Canvas(self.master, bg=self.space.background_color, bd=0)
@@ -245,10 +245,13 @@ class Screen:
         self.playing = not self.playing
         self.animate()
 
-    def show(self):
+    def show(self, speed: float = None):
+        if speed is not None:
+            self.speed = speed
+
         self.master.mainloop()
 
-    def play(self):
+    def play(self, speed: float = None):
         self.playing = True
         self.animate()
-        self.show()
+        self.show(speed)

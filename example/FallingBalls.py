@@ -96,7 +96,7 @@ def TODOdelete():
     # Print space info
     print(space)
     # Run space emulation
-    Screen(space, speed=0.2).show()
+    Screen(space).show(speed=0.2)
 
 
 if __name__ == '__main__':
